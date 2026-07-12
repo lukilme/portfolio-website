@@ -21,6 +21,8 @@ jobs:
         uses: withastro/action@v2
         with:
           node-version: 22
+      - name: Create .nojekyll
+        run: touch dist/.nojekyll
   deploy:
     needs: build
     runs-on: ubuntu-latest
