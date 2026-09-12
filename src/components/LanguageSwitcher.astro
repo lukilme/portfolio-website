@@ -1,0 +1,87 @@
+---
+import pt from '../i18n/pt.json';
+import en from '../i18n/en.json';
+
+const translations = { pt, en };
+---
+
+<button
+  type="button"
+  id="language-switcher-btn"
+  class="language-switcher"
+  aria-label="Switch to English"
+>
+  <span aria-hidden="true">PT</span>
+</button>
+
+<style>
+  .language-switcher {
+    min-width: 2.75rem;
+    height: 2.25rem;
+    padding: 0 0.5rem;
+    background: var(--clr-surface);
+    color: var(--clr-text);
+    border: 2px var(--clr-border) var(--clr-accent);
+    cursor: pointer;
+    font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
+    font-size: 0.55rem;
+  }
+
+  .language-switcher:hover {
+    background: var(--clr-accent);
+    color: var(--clr-bg);
+  }
+</style>
+
+<script define:vars={{ translations }}>
+  const button = document.getElementById('language-switcher-btn');
+
+  if (button) {
+    const getTranslation = (lang, key) => {
+      const value = key.split('.').reduce((current, part) => {
+        if (current && typeof current === 'object') {
+          return current[part];
+        }
+        return undefined;
+      }, translations[lang]);
+      return typeof value === 'string' ? value : undefined;
+    };
+
+    const translatePage = (lang) => {
+      document.querySelectorAll('[data-i18n]').forEach((element) => {
+        const translation = getTranslation(lang, element.dataset.i18n ?? '');
+        if (translation) element.textContent = translation;
+      });
+
+      document.querySelectorAll('[data-i18n-aria-label]').forEach((element) => {
+        const translation = getTranslation(lang, element.dataset.i18nAriaLabel ?? '');
+        if (translation) element.setAttribute('aria-label', translation);
+      });
+    };
+
+    const update = (lang) => {
+      const isEnglish = lang === 'en';
+      button.querySelector('span').textContent = isEnglish ? 'EN' : 'PT';
+      button.setAttribute('aria-label', isEnglish ? 'Mudar para Português' : 'Switch to English');
+    };
+
+    const currentLanguage = () => document.documentElement.lang === 'en' ? 'en' : 'pt';
+    translatePage(currentLanguage());
+    update(currentLanguage());
+
+    button.addEventListener('click', () => {
+      const nextLanguage = currentLanguage() === 'pt' ? 'en' : 'pt';
+      document.documentElement.lang = nextLanguage;
+      window.__grm_lang = nextLanguage;
+      translatePage(nextLanguage);
+
+      try {
+        localStorage.setItem('grm-lang', nextLanguage);
+      } catch (_) {
+        // Language switching still applies for the current session.
+      }
+
+      update(nextLanguage);
+    });
+  }
+</script>

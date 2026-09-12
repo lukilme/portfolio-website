@@ -1,0 +1,119 @@
+---
+// ThemeToggle.astro
+// No props — reads initial theme from <html> class; defaults to theme-dark (aria-label = to_light)
+const initialAriaKey = 'theme_toggle.to_light';
+const initialAriaLabel = 'Alternar para tema claro'; // PT default; JS will update on init
+---
+
+<button
+  type="button"
+  id="theme-toggle-btn"
+  class="theme-toggle"
+  aria-label={initialAriaLabel}
+  data-i18n-aria-label={initialAriaKey}
+>
+  <span class="theme-toggle__icon theme-toggle__icon--dark" aria-hidden="true">🌙</span>
+  <span class="theme-toggle__icon theme-toggle__icon--light" aria-hidden="true">☀️</span>
+</button>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    background: var(--clr-surface);
+    color: var(--clr-text);
+    border: 2px var(--clr-border) var(--clr-accent);
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    transition: background-color 0.15s ease;
+  }
+
+  .theme-toggle:hover {
+    background: var(--clr-accent);
+    color: var(--clr-bg);
+  }
+
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--clr-accent);
+    outline-offset: 3px;
+  }
+
+  /* Show the moon icon when theme-dark is active (default) */
+  :global(html.theme-dark) .theme-toggle__icon--dark  { display: inline; }
+  :global(html.theme-dark) .theme-toggle__icon--light { display: none; }
+
+  /* Show the sun icon when theme-light is active */
+  :global(html.theme-light) .theme-toggle__icon--dark  { display: none; }
+  :global(html.theme-light) .theme-toggle__icon--light { display: inline; }
+
+  /* Fallback: if no theme class yet, show moon (dark is the default) */
+  .theme-toggle__icon--dark  { display: inline; }
+  .theme-toggle__icon--light { display: none; }
+</style>
+
+<script>
+  // i18n labels bundled as constants — both languages available client-side
+  const LABELS: Record<string, Record<string, string>> = {
+    pt: {
+      'theme_toggle.to_light': 'Alternar para tema claro',
+      'theme_toggle.to_dark':  'Alternar para tema escuro',
+    },
+    en: {
+      'theme_toggle.to_light': 'Switch to light theme',
+      'theme_toggle.to_dark':  'Switch to dark theme',
+    },
+  };
+
+  function getLang(): string {
+    return (window as any).__grm_lang ?? 'pt';
+  }
+
+  function getLabel(key: string): string {
+    const lang = getLang();
+    return LABELS[lang]?.[key] ?? LABELS['pt'][key];
+  }
+
+  const btn = document.getElementById('theme-toggle-btn') as HTMLButtonElement | null;
+  if (btn) {
+    // Sync aria-label to the real current theme on page load
+    const html = document.documentElement;
+    const isLight = html.classList.contains('theme-light');
+    // If currently light → next action is "go dark"; if currently dark → next action is "go light"
+    const initialKey = isLight ? 'theme_toggle.to_dark' : 'theme_toggle.to_light';
+    btn.setAttribute('aria-label', getLabel(initialKey));
+    btn.setAttribute('data-i18n-aria-label', initialKey);
+
+    btn.addEventListener('click', () => {
+      const html = document.documentElement;
+      let newKey: string;
+
+      if (html.classList.contains('theme-dark')) {
+        html.classList.remove('theme-dark');
+        html.classList.add('theme-light');
+        try {
+          localStorage.setItem('grm-theme', 'theme-light');
+        } catch (_) {
+          // localStorage unavailable — theme change still applies for session
+        }
+        newKey = 'theme_toggle.to_dark'; // next click will go back to dark
+      } else {
+        html.classList.remove('theme-light');
+        html.classList.add('theme-dark');
+        try {
+          localStorage.setItem('grm-theme', 'theme-dark');
+        } catch (_) {
+          // localStorage unavailable — theme change still applies for session
+        }
+        newKey = 'theme_toggle.to_light'; // next click will go back to light
+      }
+
+      btn.setAttribute('aria-label', getLabel(newKey));
+      btn.setAttribute('data-i18n-aria-label', newKey);
+    });
+  }
+</script>

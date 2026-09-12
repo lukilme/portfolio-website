@@ -1,0 +1,38 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  lang: 'pt' | 'en';
+}
+
+const { title, description, ogImage, lang } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(ogImage ?? '/og/default.png', Astro.site).href;
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>{title}</title>
+<meta name="description" content={description} />
+
+<!-- Open Graph -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImageURL} />
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalURL} />
+
+<!-- Canonical -->
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Press Start 2P font preload -->
+<link
+  rel="preload"
+  href="/fonts/press-start-2p.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>

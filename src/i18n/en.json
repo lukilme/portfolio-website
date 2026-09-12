@@ -1,0 +1,53 @@
+{
+  "site": {
+    "name": "Grimório.exe",
+    "tagline": "Distilling the internet that was left behind"
+  },
+  "nav": {
+    "home": "Home",
+    "manifesto": "Manifesto",
+    "lab": "Lab"
+  },
+  "index": {
+    "hero_heading": "Grimório.exe",
+    "mission": "I distill the internet that was left behind and turn it into code amulets.",
+    "contact_cta": "Get in touch",
+    "contact_email": "sorcerer@grimorio.exe",
+    "featured_heading": "Featured Projects"
+  },
+  "manifesto": {
+    "heading": "Manifesto",
+    "body": "I don't create interfaces. I distill the internet that was left behind and turn it into code amulets. Every pixel is a symbol. Every bug, an enchantment."
+  },
+  "lab": {
+    "heading": "Lab",
+    "body": "This is the space where experiments take shape. Tools, rituals, and artefacts under construction — fragments of digital magic still being distilled."
+  },
+  "projects": {
+    "curse_label": "Curse",
+    "spellcast_label": "Spell Cast",
+    "result_label": "Result"
+  },
+  "visitor_counter": {
+    "label": "✨ {{count}} souls have wandered here ✨"
+  },
+  "marquee": {
+    "spell": "✦ pixel is symbol ✦ bug is enchantment ✦ code is amulet ✦ the internet that was left behind ✦"
+  },
+  "theme_toggle": {
+    "to_light": "Switch to light theme",
+    "to_dark": "Switch to dark theme"
+  },
+  "lang_switcher": {
+    "to_en": "Switch to English",
+    "to_pt": "Mudar para Português"
+  },
+  "audio": {
+    "play": "Play mystical audio",
+    "stop": "Stop mystical audio",
+    "error": "Could not play audio. Please try again."
+  },
+  "footer": {
+    "copyright": "© Grimório.exe — all spells reserved"
+  }
+}

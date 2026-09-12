@@ -1,0 +1,88 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+---
+
+<header class="site-header">
+  <a href="/" class="site-logo" aria-label="Grimório.exe — página inicial">
+    Grimório.exe
+  </a>
+
+  <nav aria-label="Navegação principal">
+    <ul>
+      <li>
+        <a href="/" data-i18n="nav.home">Início</a>
+      </li>
+      <li>
+        <a href="/manifesto" data-i18n="nav.manifesto">Manifesto</a>
+      </li>
+      <li>
+        <a href="/lab" data-i18n="nav.lab">Laboratório</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="header-controls">
+    <ThemeToggle />
+    <LanguageSwitcher />
+  </div>
+</header>
+
+<style>
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--clr-surface);
+    border-bottom: 2px var(--clr-border) var(--clr-border);
+    color: var(--clr-text);
+  }
+
+  .site-logo {
+    font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
+    font-size: 0.85rem;
+    color: var(--clr-accent);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+  }
+
+  .site-logo:hover,
+  .site-logo:focus-visible {
+    color: var(--clr-link);
+    outline: 2px solid var(--clr-accent);
+    outline-offset: 3px;
+  }
+
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
+    font-size: 0.7rem;
+    color: var(--clr-link);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+  }
+
+  nav a:hover,
+  nav a:focus-visible {
+    color: var(--clr-accent);
+    outline: 2px solid var(--clr-accent);
+    outline-offset: 3px;
+  }
+
+  .header-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+</style>

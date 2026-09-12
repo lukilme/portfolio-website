@@ -1,0 +1,53 @@
+{
+  "site": {
+    "name": "Grimório.exe",
+    "tagline": "Destilando a internet que ficou pra trás"
+  },
+  "nav": {
+    "home": "Início",
+    "manifesto": "Manifesto",
+    "lab": "Laboratório"
+  },
+  "index": {
+    "hero_heading": "Grimório.exe",
+    "mission": "Destilo a internet que ficou pra trás e transformo em amuletos de código.",
+    "contact_cta": "Entre em contato",
+    "contact_email": "feiticeiro@grimorio.exe",
+    "featured_heading": "Projetos em Destaque"
+  },
+  "manifesto": {
+    "heading": "Manifesto",
+    "body": "Não crio interfaces. Destilo a internet que ficou pra trás e transformo em amuletos de código. Cada pixel é um símbolo. Cada bug, um encantamento."
+  },
+  "lab": {
+    "heading": "Laboratório",
+    "body": "Este é o espaço onde experimentos tomam forma. Ferramentas, rituais e artefatos em construção — fragmentos de magia digital ainda sendo destilados."
+  },
+  "projects": {
+    "curse_label": "Maldição",
+    "spellcast_label": "Feitiço Lançado",
+    "result_label": "Resultado"
+  },
+  "visitor_counter": {
+    "label": "✨ {{count}} almas já vagaram por aqui ✨"
+  },
+  "marquee": {
+    "spell": "✦ pixel é símbolo ✦ bug é encantamento ✦ código é amuleto ✦ a internet que ficou pra trás ✦"
+  },
+  "theme_toggle": {
+    "to_light": "Alternar para tema claro",
+    "to_dark": "Alternar para tema escuro"
+  },
+  "lang_switcher": {
+    "to_en": "Switch to English",
+    "to_pt": "Mudar para Português"
+  },
+  "audio": {
+    "play": "Reproduzir áudio místico",
+    "stop": "Parar áudio místico",
+    "error": "Não foi possível reproduzir o áudio. Tente novamente."
+  },
+  "footer": {
+    "copyright": "© Grimório.exe — todos os feitiços reservados"
+  }
+}

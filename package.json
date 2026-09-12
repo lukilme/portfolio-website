@@ -1,0 +1,25 @@
+{
+  "name": "grimorio-exe-portfolio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "vitest --run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "astro": "^4.16.18"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.1",
+    "axe-core": "^4.10.3",
+    "fast-check": "^3.23.2",
+    "vitest": "^2.1.9",
+    "@vitest/coverage-v8": "^2.1.9",
+    "jsdom": "^25.0.1",
+    "@types/node": "^22.10.2"
+  }
+}
