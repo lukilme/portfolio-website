@@ -1,53 +1,21 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
-import LanguageSwitcher from '../components/LanguageSwitcher.astro';
-import '../styles/global.css';
+import Layout from '../layouts/Layout.astro';
 ---
 
-<!doctype html>
-<html lang="pt" class="theme-dark">
-  <head>
-    <BaseHead
-      title="Grimório.exe"
-      description="Destilo a internet que ficou pra trás e transformo em amuletos de código."
-      lang="pt"
-    />
-  </head>
-  <body>
-    <header class="site-header">
-      <a href="/" class="site-logo" aria-label="Grimório.exe — página inicial">Grimório.exe</a>
-      <ThemeToggle />
-      <LanguageSwitcher />
-    </header>
-
-    <main>
+<Layout
+  title="Grimório.exe"
+  description="Destilo a internet que ficou pra trás e transformo em amuletos de código."
+>
+  <section class="home-hero">
       <p class="eyebrow" data-i18n="site.tagline">Destilando a internet que ficou pra trás</p>
       <h1 data-i18n="index.hero_heading">Grimório.exe</h1>
       <p class="mission" data-i18n="index.mission">Destilo a internet que ficou pra trás e transformo em amuletos de código.</p>
       <a class="contact" href="mailto:feiticeiro@grimorio.exe" data-i18n="index.contact_cta">Entre em contato</a>
-    </main>
-  </body>
-</html>
+  </section>
+</Layout>
 
 <style>
-  .site-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 1.5rem;
-    background: var(--clr-surface);
-    border-bottom: 2px var(--clr-border) var(--clr-accent);
-  }
-
-  .site-logo {
-    color: var(--clr-accent);
-    font-family: "Press Start 2P", monospace;
-    font-size: 0.8rem;
-    text-decoration: none;
-  }
-
-  main {
+  .home-hero {
     max-width: 56rem;
     margin: 0 auto;
     padding: 12vh 1.5rem;

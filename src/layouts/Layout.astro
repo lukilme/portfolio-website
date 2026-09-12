@@ -1,0 +1,54 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  lang?: 'pt' | 'en';
+}
+
+const { title, description, lang = 'pt' } = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang} class="theme-dark">
+  <head>
+    <BaseHead title={title} description={description} lang={lang} />
+    <script is:inline>
+      try {
+        const stored = localStorage.getItem('grm-lang');
+        const language = stored === 'en' || stored === 'pt' ? stored : 'pt';
+        document.documentElement.lang = language;
+        window.__grm_lang = language;
+      } catch (_) {
+        document.documentElement.lang = 'pt';
+        window.__grm_lang = 'pt';
+      }
+    </script>
+  </head>
+  <body>
+    <Header />
+    <main class="site-main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <small data-i18n="footer.copyright">© Grimório.exe — todos os feitiços reservados</small>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .site-main {
+    min-height: calc(100dvh - 8rem);
+  }
+
+  .site-footer {
+    padding: 1.5rem;
+    border-top: 2px var(--clr-border) var(--clr-accent);
+    background: var(--clr-surface);
+    color: var(--clr-text);
+    text-align: center;
+  }
+</style>
