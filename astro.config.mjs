@@ -1,6 +1,8 @@
 import { defineConfig } from 'astro/config';
 
+
 export default defineConfig({
-  output: 'static',
-  site: 'https://grimorio.exe',
+  // Replace with your GitHub username and repository name
+  site: 'https://lukilme.github.io',
+  base: '/portfolio-website',
 });
