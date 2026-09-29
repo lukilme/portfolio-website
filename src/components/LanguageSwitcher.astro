@@ -1,6 +1,7 @@
 ---
 import pt from '../i18n/pt.json';
 import en from '../i18n/en.json';
+import { projectTranslations } from '../data/projects';
 
 const translations = { pt, en };
 ---
@@ -41,7 +42,7 @@ const translations = { pt, en };
   }
 </style>
 
-<script define:vars={{ translations }}>
+<script define:vars={{ translations, projectTranslations }}>
   const button = document.getElementById('language-switcher-btn');
 
   if (button) {
@@ -55,6 +56,37 @@ const translations = { pt, en };
       return typeof value === 'string' ? value : undefined;
     };
 
+    const translateProjectCopy = (lang) => {
+      document.querySelectorAll('[data-project-id]').forEach((element) => {
+        const projectId = element.dataset.projectId;
+        const field = element.dataset.projectField;
+        if (!projectId || !field) return;
+
+        const project = projectTranslations[projectId];
+        if (!project) return;
+
+        const copy = project[lang] ?? project.pt;
+        if (!copy) return;
+
+        if (field === 'title') {
+          element.textContent = copy.title;
+        }
+
+        if (field === 'description') {
+          element.textContent = copy.description;
+        }
+
+        if (field === 'longDescription') {
+          element.textContent = copy.longDescription;
+        }
+
+        if (field === 'details') {
+          const items = copy.details ?? [];
+          element.innerHTML = items.map((item) => `<li>${item}</li>`).join('');
+        }
+      });
+    };
+
     const translatePage = (lang) => {
       document.querySelectorAll('[data-i18n]').forEach((element) => {
         const translation = getTranslation(lang, element.dataset.i18n ?? '');
@@ -65,6 +97,8 @@ const translations = { pt, en };
         const translation = getTranslation(lang, element.dataset.i18nAriaLabel ?? '');
         if (translation) element.setAttribute('aria-label', translation);
       });
+
+      translateProjectCopy(lang);
     };
 
     const update = (lang) => {

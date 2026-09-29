@@ -29,6 +29,7 @@ const basePath = import.meta.env.BASE_URL || '/';
           <li>
             <ProjectSpotlightCard
               number={project.number}
+              slug={project.slug}
               title={project.title}
               description={project.description}
               tech={project.tech ?? []}
@@ -51,10 +52,11 @@ const basePath = import.meta.env.BASE_URL || '/';
           <li>
             <ProjectMiniCard
               number={project.number}
+              slug={project.slug}
               title={project.title}
               description={project.description}
               image={project.image}
-              href={`${basePath}projetos/${project.slug}`}
+              href={`${basePath}/projetos/${project.slug}`}
             />
           </li>
         ))}
@@ -68,6 +70,12 @@ const basePath = import.meta.env.BASE_URL || '/';
     max-width: 72rem;
     margin: 0 auto;
     padding: 10vh 1.5rem 5rem;
+    color: var(--clr-text);
+    background: var(--clr-bg);
+  }
+
+  :global(html.theme-light) .page-shell {
+    background: linear-gradient(180deg, #f5f5f0 0%, #ffffff 100%);
   }
 
   .page-header {
@@ -89,7 +97,6 @@ const basePath = import.meta.env.BASE_URL || '/';
     line-height: 1.1;
   }
 
-  /* Cabeçalho de seção: título + linha + contagem */
   .block-head {
     display: flex;
     align-items: center;
@@ -107,16 +114,30 @@ const basePath = import.meta.env.BASE_URL || '/';
 
   .block-count {
     order: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    padding: 0.35rem 0.5rem;
+    border: 2px solid var(--clr-text);
+    background: var(--clr-surface);
+    color: var(--clr-text);
     font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
     font-size: 0.6rem;
+    box-shadow: 3px 3px 0 var(--clr-text);
+  }
+
+  :global(html.theme-light) .block-count {
+    background: #ffffff;
   }
 
   .block-title {
     margin: 0;
     font-size: 1.25rem;
+    color: var(--clr-text);
   }
 
-  /* A seção secundária fala mais baixo: título menor, linha mais fina */
   .block-head--quiet::after {
     height: 2px;
     opacity: 0.6;
@@ -133,17 +154,19 @@ const basePath = import.meta.env.BASE_URL || '/';
     list-style: none;
   }
 
-  /* Destaques em coluna única: cada um tem espaço para respirar */
   .featured-list {
     display: grid;
     gap: 3.5rem;
-    /* reserva o espaço da sombra de 10px para não ser cortada */
     padding-right: 10px;
     padding-bottom: 10px;
   }
 
   .featured-block {
     margin-bottom: 5rem;
+  }
+
+  .block {
+    color: var(--clr-text);
   }
 
   .mini-grid {

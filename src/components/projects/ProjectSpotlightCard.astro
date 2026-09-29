@@ -9,6 +9,7 @@ interface Slide {
 
 interface Props {
   number: string;
+  slug?: string;
   title: string;
   description: string;
   tech?: string[];
@@ -16,7 +17,7 @@ interface Props {
   href?: string;
 }
 
-const { number, title, description, tech = [], slides = [], href = '#' } = Astro.props;
+const { number, slug, title, description, tech = [], slides = [], href = '#' } = Astro.props;
 const safeSlides = slides.length > 0 ? slides : [{ id: 'fallback', colorA: '#111111', colorB: '#d9d9d1', alt: title }];
 const hasMany = safeSlides.length > 1;
 ---
@@ -49,14 +50,14 @@ const hasMany = safeSlides.length > 1;
   <div class="body">
     <div class="meta">
       <span class="badge">{number}</span>
-      <span class="kicker">Projeto principal</span>
+      <span class="kicker" data-i18n="projects.featured_label">Projeto principal</span>
     </div>
-    <h2>{title}</h2>
-    <p>{description}</p>
+    <h2 data-project-id={slug} data-project-field="title">{title}</h2>
+    <p data-project-id={slug} data-project-field="description">{description}</p>
     <ul class="tech" aria-label="Tecnologias utilizadas">
       {tech.map((item) => <li>{item}</li>)}
     </ul>
-    <a class="detail-link" href={href}>Detalhes do projeto →</a>
+    <a class="detail-link" href={href} data-i18n="projects.detail_cta">Detalhes do projeto →</a>
   </div>
 </article>
 
@@ -107,7 +108,18 @@ const hasMany = safeSlides.length > 1;
     padding: 0.75rem;
     border: 2px solid var(--clr-text);
     background: var(--clr-surface);
+    color: var(--clr-text);
     box-shadow: 8px 8px 0 var(--clr-text);
+  }
+
+  :global(html.theme-light) .featured {
+    background: #ffffff;
+    border-color: var(--clr-text);
+    box-shadow: 8px 8px 0 var(--clr-text);
+  }
+
+  :global(html.theme-dark) .featured {
+    background: var(--clr-surface);
   }
 
   .visual {
@@ -167,8 +179,27 @@ const hasMany = safeSlides.length > 1;
     cursor: pointer;
   }
 
+  :global(html.theme-light) .number{
+    color: var(--clr-text);
+  }
+
+  :global(html.theme-light) .controls button,
+  :global(html.theme-light) .detail-link,
+  :global(html.theme-light) .tech li {
+    background: var(--clr-bg);
+    color: var(--clr-text);
+  }
+
   .controls button:hover {
     background: var(--clr-accent);
+    color: var(--clr-bg);
+  }
+
+  :global(html.theme-light) .controls button:hover,
+  :global(html.theme-light) .detail-link:hover,
+  :global(html.theme-light) .detail-link:focus-visible {
+    background: var(--clr-accent);
+    color: var(--clr-bg);
   }
 
   .body {
@@ -192,8 +223,13 @@ const hasMany = safeSlides.length > 1;
     padding: 0 0.35rem;
     border: 2px solid var(--clr-text);
     background: var(--clr-accent);
+    color: var(--clr-bg);
     font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
-    font-size: 0.6rem;
+    font-size: 1rem;
+  }
+
+  :global(html.theme-light) .badge {
+    background: var(--clr-text);
   }
 
   .kicker {
@@ -247,6 +283,7 @@ const hasMany = safeSlides.length > 1;
   .detail-link:hover,
   .detail-link:focus-visible {
     background: var(--clr-accent);
+    color: var(--clr-bg);
   }
 
   @media (min-width: 52rem) {

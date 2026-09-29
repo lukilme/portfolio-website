@@ -8,13 +8,14 @@ interface ProjectImage {
 
 interface Props {
   number: string;
+  slug?: string;
   title: string;
   description: string;
   image?: ProjectImage;
   href?: string;
 }
 
-const { number, title, description, image, href = '#' } = Astro.props;
+const { number, slug, title, description, image, href = '#' } = Astro.props;
 const mediaSrc = image?.src;
 const mediaAlt = image?.alt ?? title;
 const fallbackBackground =
@@ -34,9 +35,9 @@ const fallbackBackground =
 
   <div class="meta">
     <span class="number">{number}</span>
-    <h2>{title}</h2>
-    <p>{description}</p>
-    <a class="detail-link" href={href}>Detalhes →</a>
+    <h2 data-project-id={slug} data-project-field="title">{title}</h2>
+    <p data-project-id={slug} data-project-field="description">{description}</p>
+    <a class="detail-link" href={href} data-i18n="projects.detail_cta">Detalhes →</a>
   </div>
 </article>
 
@@ -48,8 +49,15 @@ const fallbackBackground =
     padding: 0.75rem;
     border: 2px solid var(--clr-text);
     background: var(--clr-surface);
+    color: var(--clr-text);
     box-shadow: 6px 6px 0 var(--clr-text);
     transition: transform 120ms ease, box-shadow 120ms ease;
+  }
+
+
+
+  :global(html.theme-light) .project-card {
+    background: #ffffff;
   }
 
   .project-card:hover,
@@ -97,6 +105,7 @@ const fallbackBackground =
   .detail-link:hover,
   .detail-link:focus-visible {
     background: var(--clr-accent);
+    color: var(--clr-bg);
   }
 
   .number {
@@ -104,6 +113,12 @@ const fallbackBackground =
     font-size: 0.6rem;
     letter-spacing: 0.08em;
     color: var(--clr-accent);
+
+
+  }
+
+  :global(html.theme-light) .number {
+    color: var(--clr-text);
   }
 
   h2 {

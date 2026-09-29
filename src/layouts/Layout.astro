@@ -45,10 +45,35 @@ const { title, description, lang = 'pt' } = Astro.props;
   }
 
   .site-footer {
-    padding: 1.5rem;
-    border-top: 2px var(--clr-border) var(--clr-accent);
+    margin-top: 2rem;
+    padding: 1.25rem 1rem;
+    border-top: 3px solid var(--clr-text);
     background: var(--clr-surface);
     color: var(--clr-text);
     text-align: center;
+    box-shadow: 0 -6px 0 var(--clr-text);
+  }
+
+  .site-footer small {
+    margin-top: 1rem;
+    margin-bottom: 4rem;
+    display: inline-block;
+    padding: 0.4rem 0.75rem;
+    border: 2px solid var(--clr-text);
+    background: var(--clr-bg);
+    color: var(--clr-text);
+    font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.6;
+  }
+
+  :global(html.theme-light) .site-footer {
+    background: #ffffff;
+  }
+
+  :global(html.theme-light) .site-footer small {
+    background: #f5f5f0;
   }
 </style>

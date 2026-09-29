@@ -29,13 +29,13 @@ const visualBackground =
   lang="pt"
 >
   <main class="project-page">
-    <a class="back-link" href={`${basePath}/projetos/`}>← Voltar para projetos</a>
+    <a class="back-link" href={`${basePath}/projetos/`} data-i18n="projects.back_to_projects">← Voltar para projetos</a>
 
     <header class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">Projeto</p>
-        <h1>{currentProject.title}</h1>
-        <p class="summary">{currentProject.longDescription}</p>
+        <p class="eyebrow" data-i18n="projects.project_label">Projeto</p>
+        <h1 data-project-id={currentProject.slug} data-project-field="title">{currentProject.title}</h1>
+        <p class="summary" data-project-id={currentProject.slug} data-project-field="longDescription">{currentProject.longDescription}</p>
       </div>
 
       <div class="hero-visual" style={`background: ${visualBackground};`}>
@@ -49,13 +49,13 @@ const visualBackground =
 
     <section class="content">
       <div class="section-block">
-        <h2>Resumo</h2>
-        <p>{currentProject.description}</p>
+        <h2 data-i18n="projects.summary_label">Resumo</h2>
+        <p data-project-id={currentProject.slug} data-project-field="description">{currentProject.description}</p>
       </div>
 
       {currentProject.tech && currentProject.tech.length > 0 && (
         <div class="section-block">
-          <h2>Tecnologias</h2>
+          <h2 data-i18n="projects.technologies_label">Tecnologias</h2>
           <ul class="tech-list">
             {currentProject.tech.map((item) => <li>{item}</li>)}
           </ul>
@@ -63,8 +63,8 @@ const visualBackground =
       )}
 
       <div class="section-block">
-        <h2>Detalhes</h2>
-        <ul class="detail-list">
+        <h2 data-i18n="projects.details_label">Detalhes</h2>
+        <ul class="detail-list" data-project-id={currentProject.slug} data-project-field="details">
           {currentProject.details.map((item) => <li>{item}</li>)}
         </ul>
       </div>
@@ -139,7 +139,12 @@ const visualBackground =
     padding: 1.2rem 1.1rem;
     border: 2px solid var(--clr-text);
     background: var(--clr-surface);
+    color: var(--clr-text);
     box-shadow: 6px 6px 0 var(--clr-text);
+  }
+
+  :global(html.theme-light) .section-block {
+    background: #ffffff;
   }
 
   .section-block h2 {
@@ -174,8 +179,13 @@ const visualBackground =
     padding: 0.25rem 0.6rem;
     border: 2px solid var(--clr-text);
     background: var(--clr-bg);
+    color: var(--clr-text);
     font-size: 0.75rem;
     font-weight: 700;
+  }
+
+  :global(html.theme-light) .tech-list li {
+    background: #f5f5f0;
   }
 
   .detail-list li + li {
