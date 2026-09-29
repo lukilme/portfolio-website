@@ -5,6 +5,7 @@
   },
   "nav": {
     "home": "Home",
+    "projects": "Projects",
     "manifesto": "About",
     "lab": "Lab"
   },
@@ -26,6 +27,22 @@
     "body": "This is the space where experiments take shape. Interfaces, systems, and structures in evolution — prototypes designed to be understood, tested, and refined."
   },
   "projects": {
+    "eyebrow": "Projects",
+    "heading": "Systems, prototypes, and interfaces in production.",
+    "featured_title": "Featured projects",
+    "secondary_title": "Other work",
+    "project1_title": "signal::archive",
+    "project1_desc": "Minimal editorial architecture to present ideas, systems, and drafts with clarity.",
+    "project2_title": "Interface Audit",
+    "project2_desc": "Visual and structural diagnosis of product flows, hierarchies, and usability decisions.",
+    "project3_title": "System Notes",
+    "project3_desc": "Record of patterns, documentation, and product decisions in a simple reference system.",
+    "project4_title": "Build Control",
+    "project4_desc": "Release monitoring and delivery decisions across product environments.",
+    "project5_title": "Signal Log",
+    "project5_desc": "Visual record of events, metrics, and process data for continuous analysis.",
+    "project6_title": "UX Library",
+    "project6_desc": "Reusable component collection to maintain product consistency.",
     "curse_label": "Context",
     "spellcast_label": "Execution",
     "result_label": "Result"
@@ -45,8 +62,8 @@
     "to_pt": "Mudar para Português"
   },
   "audio": {
-    "play": "Play mystical audio",
-    "stop": "Stop mystical audio",
+    "play": "Play audio",
+    "stop": "Stop audio",
     "error": "Could not play audio. Please try again."
   },
   "footer": {

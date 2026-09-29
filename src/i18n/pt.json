@@ -5,6 +5,7 @@
   },
   "nav": {
     "home": "Início",
+    "projects": "Projetos",
     "manifesto": "Sobre",
     "lab": "Laboratório"
   },
@@ -26,6 +27,22 @@
     "body": "Este é o espaço onde experimentos ganham forma. Estruturas, interfaces e sistemas em evolução — protótipos pensados para ser entendidos, testados e melhorados."
   },
   "projects": {
+    "eyebrow": "Projetos",
+    "heading": "Sistemas, protótipos e interfaces em produção.",
+    "featured_title": "Projetos em destaque",
+    "secondary_title": "Outros trabalhos",
+    "project1_title": "signal::archive",
+    "project1_desc": "Arquitetura editorial minimalista para apresentar ideias, sistemas e rascunhos com clareza.",
+    "project2_title": "Interface Audit",
+    "project2_desc": "Diagnóstico visual e estrutural de fluxos, hierarquias e decisões de usabilidade em produtos.",
+    "project3_title": "System Notes",
+    "project3_desc": "Registro de padrões, documentação e decisões de produto em um sistema de referência simples.",
+    "project4_title": "Build Control",
+    "project4_desc": "Monitoramento de releases e decisões de entrega em ambientes de produto.",
+    "project5_title": "Signal Log",
+    "project5_desc": "Registro visual de eventos, métricas e processos para análise contínua.",
+    "project6_title": "UX Library",
+    "project6_desc": "Coleção de componentes reutilizáveis para manter consistência de produto.",
     "curse_label": "Contexto",
     "spellcast_label": "Execução",
     "result_label": "Resultado"
@@ -45,8 +62,8 @@
     "to_pt": "Mudar para Português"
   },
   "audio": {
-    "play": "Reproduzir áudio místico",
-    "stop": "Parar áudio místico",
+    "play": "Reproduzir áudio",
+    "stop": "Parar áudio",
     "error": "Não foi possível reproduzir o áudio. Tente novamente."
   },
   "footer": {

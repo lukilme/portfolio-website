@@ -1,0 +1,156 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProjectSpotlightCard from '../components/projects/ProjectSpotlightCard.astro';
+import ProjectMiniCard from '../components/projects/ProjectMiniCard.astro';
+import { featuredProjects, secondaryProjects } from '../data/projects';
+
+const basePath = import.meta.env.BASE_URL || '/';
+---
+
+<Layout
+  title="Projetos | signal::archive"
+  description="Projetos, experimentos e sistemas desenvolvidos com foco em clareza, arquitetura e interface."
+  lang="pt"
+>
+  <main class="page-shell">
+    <header class="page-header">
+      <p class="eyebrow" data-i18n="projects.eyebrow">Projetos</p>
+      <h1 data-i18n="projects.heading">Sistemas, protótipos e interfaces em produção.</h1>
+    </header>
+
+    <section class="block featured-block" aria-labelledby="featured-title">
+      <div class="block-head">
+        <h2 id="featured-title" class="block-title" data-i18n="projects.featured_title">Projetos em destaque</h2>
+        <span class="block-count">{String(featuredProjects.length).padStart(2, '0')}</span>
+      </div>
+
+      <ul class="featured-list">
+        {featuredProjects.map((project) => (
+          <li>
+            <ProjectSpotlightCard
+              number={project.number}
+              title={project.title}
+              description={project.description}
+              tech={project.tech ?? []}
+              slides={project.slides ?? []}
+              href={`${basePath}/projetos/${project.slug}`}
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="block secondary-block" aria-labelledby="secondary-title">
+      <div class="block-head block-head--quiet">
+        <h2 id="secondary-title" class="block-title" data-i18n="projects.secondary_title">Outros trabalhos</h2>
+        <span class="block-count">{String(secondaryProjects.length).padStart(2, '0')}</span>
+      </div>
+
+      <ul class="mini-grid">
+        {secondaryProjects.map((project) => (
+          <li>
+            <ProjectMiniCard
+              number={project.number}
+              title={project.title}
+              description={project.description}
+              image={project.image}
+              href={`${basePath}projetos/${project.slug}`}
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .page-shell {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 10vh 1.5rem 5rem;
+  }
+
+  .page-header {
+    max-width: 48rem;
+    margin-bottom: 4rem;
+  }
+
+  .eyebrow {
+    margin: 0 0 1.25rem;
+    color: var(--clr-accent);
+    font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2.1rem, 5vw, 4rem);
+    line-height: 1.1;
+  }
+
+  /* Cabeçalho de seção: título + linha + contagem */
+  .block-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .block-head::after {
+    content: "";
+    order: 1;
+    flex: 1;
+    height: 3px;
+    background: var(--clr-text);
+  }
+
+  .block-count {
+    order: 2;
+    font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
+    font-size: 0.6rem;
+  }
+
+  .block-title {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+
+  /* A seção secundária fala mais baixo: título menor, linha mais fina */
+  .block-head--quiet::after {
+    height: 2px;
+    opacity: 0.6;
+  }
+
+  .block-head--quiet .block-title {
+    font-size: 1rem;
+  }
+
+  .featured-list,
+  .mini-grid {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Destaques em coluna única: cada um tem espaço para respirar */
+  .featured-list {
+    display: grid;
+    gap: 3.5rem;
+    /* reserva o espaço da sombra de 10px para não ser cortada */
+    padding-right: 10px;
+    padding-bottom: 10px;
+  }
+
+  .featured-block {
+    margin-bottom: 5rem;
+  }
+
+  .mini-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 1.5rem;
+    padding-right: 5px;
+    padding-bottom: 5px;
+  }
+</style>

@@ -1,0 +1,190 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { allProjects, getProjectBySlug } from '../../data/projects';
+
+export function getStaticPaths() {
+  return allProjects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const currentProject = project ?? getProjectBySlug(Astro.params.slug ?? '');
+
+if (!currentProject) {
+  throw new Error('Projeto não encontrado.');
+}
+
+const basePath = import.meta.env.BASE_URL || '/';
+const visualBackground =
+  currentProject.image?.colorA && currentProject.image?.colorB
+    ? `linear-gradient(135deg, ${currentProject.image.colorA} 0%, ${currentProject.image.colorB} 100%)`
+    : 'linear-gradient(135deg, #111111 0%, #7a7a7a 100%)';
+---
+
+<Layout
+  title={`${currentProject.title} | signal::archive`}
+  description={currentProject.longDescription}
+  lang="pt"
+>
+  <main class="project-page">
+    <a class="back-link" href={`${basePath}/projetos/`}>← Voltar para projetos</a>
+
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Projeto</p>
+        <h1>{currentProject.title}</h1>
+        <p class="summary">{currentProject.longDescription}</p>
+      </div>
+
+      <div class="hero-visual" style={`background: ${visualBackground};`}>
+        {currentProject.image?.src ? (
+          <img src={currentProject.image.src} alt={currentProject.image.alt ?? currentProject.title} loading="eager" />
+        ) : currentProject.slides?.[0]?.src ? (
+          <img src={currentProject.slides[0].src} alt={currentProject.slides[0].alt ?? currentProject.title} loading="eager" />
+        ) : null}
+      </div>
+    </header>
+
+    <section class="content">
+      <div class="section-block">
+        <h2>Resumo</h2>
+        <p>{currentProject.description}</p>
+      </div>
+
+      {currentProject.tech && currentProject.tech.length > 0 && (
+        <div class="section-block">
+          <h2>Tecnologias</h2>
+          <ul class="tech-list">
+            {currentProject.tech.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      )}
+
+      <div class="section-block">
+        <h2>Detalhes</h2>
+        <ul class="detail-list">
+          {currentProject.details.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .project-page {
+    max-width: 62rem;
+    margin: 0 auto;
+    padding: 9vh 1.5rem 5rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: var(--clr-text);
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  .hero {
+    display: grid;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .eyebrow {
+    margin: 0 0 1rem;
+    color: var(--clr-accent);
+    font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0 0 1rem;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    line-height: 1.05;
+  }
+
+  .summary {
+    margin: 0;
+    max-width: 42rem;
+    font-size: clamp(1.05rem, 2vw, 1.4rem);
+    line-height: 1.6;
+  }
+
+  .hero-visual {
+    min-height: 18rem;
+    border: 2px solid var(--clr-text);
+    box-shadow: 8px 8px 0 var(--clr-text);
+    overflow: hidden;
+  }
+
+  .hero-visual img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .content {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .section-block {
+    padding: 1.2rem 1.1rem;
+    border: 2px solid var(--clr-text);
+    background: var(--clr-surface);
+    box-shadow: 6px 6px 0 var(--clr-text);
+  }
+
+  .section-block h2 {
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .section-block p,
+  .detail-list {
+    margin: 0;
+    line-height: 1.7;
+  }
+
+  .tech-list,
+  .detail-list {
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+
+  .tech-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .tech-list li {
+    padding: 0.25rem 0.6rem;
+    border: 2px solid var(--clr-text);
+    background: var(--clr-bg);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .detail-list li + li {
+    margin-top: 0.65rem;
+  }
+
+  @media (min-width: 52rem) {
+    .hero {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    }
+  }
+</style>

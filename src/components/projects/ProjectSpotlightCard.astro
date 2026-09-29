@@ -1,0 +1,262 @@
+---
+interface Slide {
+  id: string;
+  colorA: string;
+  colorB: string;
+  src?: string;
+  alt?: string;
+}
+
+interface Props {
+  number: string;
+  title: string;
+  description: string;
+  tech?: string[];
+  slides?: Slide[];
+  href?: string;
+}
+
+const { number, title, description, tech = [], slides = [], href = '#' } = Astro.props;
+const safeSlides = slides.length > 0 ? slides : [{ id: 'fallback', colorA: '#111111', colorB: '#d9d9d1', alt: title }];
+const hasMany = safeSlides.length > 1;
+---
+
+<article class="featured" data-carousel>
+  <div class="visual">
+    <div class="slides">
+      {safeSlides.map((slide, i) => (
+        <div
+          class:list={['slide', { active: i === 0 }]}
+          style={`background: linear-gradient(135deg, ${slide.colorA} 0%, ${slide.colorB} 100%);`}
+          aria-hidden={i === 0 ? 'false' : 'true'}
+        >
+          {slide.src && <img src={slide.src} alt={slide.alt ?? `${title} — imagem ${i + 1}`} loading="lazy" />}
+        </div>
+      ))}
+    </div>
+
+    {hasMany && (
+      <div class="controls">
+        <span class="counter" aria-live="polite">
+          <span data-current>1</span>/{safeSlides.length}
+        </span>
+        <button type="button" data-dir="-1" aria-label="Imagem anterior">←</button>
+        <button type="button" data-dir="1" aria-label="Próxima imagem">→</button>
+      </div>
+    )}
+  </div>
+
+  <div class="body">
+    <div class="meta">
+      <span class="badge">{number}</span>
+      <span class="kicker">Projeto principal</span>
+    </div>
+    <h2>{title}</h2>
+    <p>{description}</p>
+    <ul class="tech" aria-label="Tecnologias utilizadas">
+      {tech.map((item) => <li>{item}</li>)}
+    </ul>
+    <a class="detail-link" href={href}>Detalhes do projeto →</a>
+  </div>
+</article>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((root) => {
+    const slides = [...root.querySelectorAll<HTMLElement>('.slide')];
+    const counter = root.querySelector<HTMLElement>('[data-current]');
+    if (slides.length < 2) return;
+
+    let index = 0;
+    let timer: number | undefined;
+
+    const show = (next: number) => {
+      index = (next + slides.length) % slides.length;
+      slides.forEach((s, i) => {
+        s.classList.toggle('active', i === index);
+        s.setAttribute('aria-hidden', String(i !== index));
+      });
+      if (counter) counter.textContent = String(index + 1);
+    };
+
+    const start = () => {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      stop();
+      timer = window.setInterval(() => show(index + 1), 5000);
+    };
+    const stop = () => window.clearInterval(timer);
+
+    root.querySelectorAll<HTMLButtonElement>('[data-dir]').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        show(index + Number(btn.dataset.dir));
+        start();
+      })
+    );
+
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    root.addEventListener('focusin', stop);
+    root.addEventListener('focusout', start);
+    start();
+  });
+</script>
+
+<style>
+  .featured {
+    display: grid;
+    gap: 1rem;
+    padding: 0.75rem;
+    border: 2px solid var(--clr-text);
+    background: var(--clr-surface);
+    box-shadow: 8px 8px 0 var(--clr-text);
+  }
+
+  .visual {
+    position: relative;
+    min-height: 17rem;
+    overflow: hidden;
+    border: 2px solid var(--clr-text);
+    background: var(--clr-bg);
+  }
+
+  .slides,
+  .slide {
+    position: absolute;
+    inset: 0;
+  }
+
+  .slide {
+    opacity: 0;
+    transition: opacity 180ms ease;
+  }
+
+  .slide.active {
+    opacity: 1;
+  }
+
+  .slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .controls {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .counter {
+    padding: 0.3rem 0.5rem;
+    border: 2px solid var(--clr-text);
+    background: var(--clr-surface);
+    font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
+    font-size: 0.55rem;
+  }
+
+  .controls button {
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid var(--clr-text);
+    background: var(--clr-surface);
+    color: var(--clr-text);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .controls button:hover {
+    background: var(--clr-accent);
+  }
+
+  .body {
+    display: grid;
+    gap: 0.8rem;
+    padding: 0.25rem 0.25rem 0.5rem;
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.4rem;
+    min-height: 2.4rem;
+    padding: 0 0.35rem;
+    border: 2px solid var(--clr-text);
+    background: var(--clr-accent);
+    font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
+    font-size: 0.6rem;
+  }
+
+  .kicker {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    line-height: 1.1;
+  }
+
+  p {
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tech li {
+    padding: 0.2rem 0.55rem;
+    border: 2px solid var(--clr-text);
+    background: var(--clr-bg);
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .detail-link {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    justify-content: center;
+    padding: 0.45rem 0.8rem;
+    border: 2px solid var(--clr-text);
+    background: var(--clr-bg);
+    color: var(--clr-text);
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  .detail-link:hover,
+  .detail-link:focus-visible {
+    background: var(--clr-accent);
+  }
+
+  @media (min-width: 52rem) {
+    .featured {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      align-items: center;
+    }
+
+    .visual {
+      min-height: 20rem;
+    }
+  }
+</style>
