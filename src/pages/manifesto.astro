@@ -1,0 +1,106 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Sobre | signal::archive"
+  description="Um manifesto sobre clareza, arquitetura da informação e interfaces digitais com intenção."
+  lang="pt"
+>
+  <section class="page-shell">
+    <p class="eyebrow" data-i18n="manifesto.eyebrow">Sobre</p>
+    <h1 data-i18n="manifesto.heading">Estruturas simples. Sinais claros. Sistema robusto.</h1>
+
+    <div class="content-grid">
+      <article class="story">
+        <p data-i18n="manifesto.body">
+          signal::archive nasce da convicção de que a web precisa ser mais legível, mais consistente
+          e mais útil. Em vez de ruído, buscamos clareza. Em vez de excesso, buscamos contexto.
+          Em vez de tendência, buscamos intenção.
+        </p>
+      </article>
+
+      <aside class="principles">
+        <h2>Princípios</h2>
+        <ul>
+          <li>Clareza em vez de excesso.</li>
+          <li>Estrutura em vez de improviso.</li>
+          <li>Consistência em vez de tendência.</li>
+          <li>Uso real em vez de estética vazia.</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .page-shell {
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: 10vh 1.5rem 4rem;
+  }
+
+  .eyebrow {
+    color: var(--clr-accent);
+    font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 {
+    font-size: clamp(2.1rem, 5vw, 4.5rem);
+    margin-bottom: 2rem;
+    line-height: 1.1;
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .story {
+    display: grid;
+    gap: 1.25rem;
+    font-size: 1.08rem;
+  }
+
+  .principles {
+    border: 2px solid var(--clr-text);
+    background: var(--clr-surface);
+    box-shadow: 6px 6px 0 var(--clr-text);
+    padding: 1.25rem;
+  }
+
+  .principles h2 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .principles ul {
+    list-style: none;
+    display: grid;
+    gap: 0.75rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  .principles li {
+    padding: 0.75rem 0.5rem;
+    border-top: 2px solid var(--clr-text);
+  }
+
+  .principles li:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  @media (max-width: 700px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

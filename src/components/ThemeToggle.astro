@@ -21,26 +21,26 @@ const initialAriaLabel = 'Alternar para tema claro'; // PT default; JS will upda
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
     padding: 0;
     background: var(--clr-surface);
     color: var(--clr-text);
-    border: 2px var(--clr-border) var(--clr-accent);
+    border: 2px solid var(--clr-text);
+    box-shadow: 3px 3px 0 var(--clr-text);
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     line-height: 1;
-    transition: background-color 0.15s ease;
+    transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
   }
 
-  .theme-toggle:hover {
-    background: var(--clr-accent);
-    color: var(--clr-bg);
-  }
-
+  .theme-toggle:hover,
   .theme-toggle:focus-visible {
-    outline: 2px solid var(--clr-accent);
-    outline-offset: 3px;
+    background: var(--clr-highlight);
+    color: var(--clr-bg);
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--clr-text);
+    outline: none;
   }
 
   /* Show the moon icon when theme-dark is active (default) */

@@ -1,0 +1,105 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Laboratório | signal::archive"
+  description="Um laboratório de arquitetura de informação, protótipos e interfaces em evolução."
+  lang="pt"
+>
+  <section class="page-shell">
+    <p class="eyebrow" data-i18n="lab.eyebrow">Laboratório</p>
+    <h1 data-i18n="lab.heading">Experimentos em arquitetura, interface e sistemas.</h1>
+    <p class="intro" data-i18n="lab.body">
+      Este é o espaço onde experimentos ganham forma. Estruturas, interfaces e sistemas em evolução —
+      protótipos pensados para ser entendidos, testados e melhorados.
+    </p>
+
+    <div class="lab-grid">
+      <article class="lab-card">
+        <span class="tag">01</span>
+        <h2>Arquitetura</h2>
+        <p>
+          Estruturas simples, narrativas claras e interfaces que respeitam o comportamento do usuário.
+        </p>
+      </article>
+
+      <article class="lab-card">
+        <span class="tag">02</span>
+        <h2>Interface</h2>
+        <p>
+          Contraste, ritmo visual e hierarquia funcional para comunicar sem ruído.
+        </p>
+      </article>
+
+      <article class="lab-card">
+        <span class="tag">03</span>
+        <h2>Ritmo</h2>
+        <p>
+          Código e conteúdo pensados com intenção: legíveis, consistentes e fáceis de manter.
+        </p>
+      </article>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .page-shell {
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: 10vh 1.5rem 4rem;
+  }
+
+  .eyebrow {
+    color: var(--clr-accent);
+    font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 {
+    font-size: clamp(2.1rem, 5vw, 4.3rem);
+    margin-bottom: 2.5rem;
+    line-height: 1.1;
+  }
+
+  .lab-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .lab-card {
+    border: 2px solid var(--clr-text);
+    background: var(--clr-surface);
+    box-shadow: 6px 6px 0 var(--clr-text);
+    padding: 1.25rem;
+    min-height: 14rem;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    border: 2px solid var(--clr-text);
+    background: var(--clr-bg);
+    font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
+    font-size: 0.55rem;
+    margin-bottom: 1rem;
+  }
+
+  .lab-card h2 {
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 800px) {
+    .lab-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -19,26 +19,26 @@
    ----------------------------------------------------------- */
 :root,
 html.theme-dark {
-  --clr-bg:        #1A1A1A;
-  --clr-surface:   #3A3A3A;
-  --clr-text:      #C0C0C0;
-  --clr-accent:    #00FF00;
-  --clr-link:      #CC66FF;
-  --clr-border:    groove;   /* border-style keyword */
-  --clr-highlight: #00FF00;
+  --clr-bg:        #111111;
+  --clr-surface:   #1a1a1a;
+  --clr-text:      #f5f5f0;
+  --clr-accent:    #f5f5f0;
+  --clr-link:      #f5f5f0;
+  --clr-border:    solid;
+  --clr-highlight: #d9d9d9;
 }
 
 /* -----------------------------------------------------------
-   Theme tokens — Light (Win98 / GeoCities)
+   Theme tokens — Light (minimal black & white)
    ----------------------------------------------------------- */
 html.theme-light {
-  --clr-bg:        #C0C0C0;
-  --clr-surface:   #D4D0C8;
-  --clr-text:      #000080;
-  --clr-accent:    #B8860B;
-  --clr-link:      #800080;
-  --clr-border:    ridge;    /* border-style keyword */
-  --clr-highlight: #00FF00;
+  --clr-bg:        #f5f5f0;
+  --clr-surface:   #ffffff;
+  --clr-text:      #111111;
+  --clr-accent:    #111111;
+  --clr-link:      #111111;
+  --clr-border:    solid;
+  --clr-highlight: #d9d9d9;
 }
 
 /* -----------------------------------------------------------
@@ -61,16 +61,7 @@ html.theme-light {
 body {
   min-height: 100dvh;
   background-color: var(--clr-bg);
-  /*
-    Inline SVG pattern: 4×4 px tile, 1×1 px dot at top-left.
-    Colour matches --clr-surface but is embedded as a literal
-    value here because data URIs cannot reference CSS vars.
-    The pattern is purely decorative and repeats via tile.
-  */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect x='0' y='0' width='1' height='1' fill='%23555555' fill-opacity='0.35'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 4px 4px;
-
+  background-image: none;
   color: var(--clr-text);
   font-family: "Courier New", monospace;
   font-size: 1rem;

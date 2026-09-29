@@ -1,38 +1,40 @@
 {
   "site": {
-    "name": "Grimório.exe",
-    "tagline": "Destilando a internet que ficou pra trás"
+    "name": "signal::archive",
+    "tagline": "Arquitetura digital com clareza e consistência"
   },
   "nav": {
     "home": "Início",
-    "manifesto": "Manifesto",
+    "manifesto": "Sobre",
     "lab": "Laboratório"
   },
   "index": {
-    "hero_heading": "Grimório.exe",
-    "mission": "Destilo a internet que ficou pra trás e transformo em amuletos de código.",
+    "hero_heading": "signal::archive",
+    "mission": "Transformo arquitetura da informação em interfaces funcionais, consistentes e com intenção.",
     "contact_cta": "Entre em contato",
-    "contact_email": "feiticeiro@grimorio.exe",
+    "contact_email": "hello@signalarchive.dev",
     "featured_heading": "Projetos em Destaque"
   },
   "manifesto": {
-    "heading": "Manifesto",
-    "body": "Não crio interfaces. Destilo a internet que ficou pra trás e transformo em amuletos de código. Cada pixel é um símbolo. Cada bug, um encantamento."
+    "eyebrow": "Sobre",
+    "heading": "Estruturas simples. Sinais claros. Sistema robusto.",
+    "body": "Não construo rituais. Construo estruturas claras, acessíveis e coerentes. Cada decisão de interface existe para reduzir ruído, melhorar leitura e aumentar a compreensão."
   },
   "lab": {
-    "heading": "Laboratório",
-    "body": "Este é o espaço onde experimentos tomam forma. Ferramentas, rituais e artefatos em construção — fragmentos de magia digital ainda sendo destilados."
+    "eyebrow": "Laboratório",
+    "heading": "Experimentos em arquitetura, interface e sistemas.",
+    "body": "Este é o espaço onde experimentos ganham forma. Estruturas, interfaces e sistemas em evolução — protótipos pensados para ser entendidos, testados e melhorados."
   },
   "projects": {
-    "curse_label": "Maldição",
-    "spellcast_label": "Feitiço Lançado",
+    "curse_label": "Contexto",
+    "spellcast_label": "Execução",
     "result_label": "Resultado"
   },
   "visitor_counter": {
-    "label": "✨ {{count}} almas já vagaram por aqui ✨"
+    "label": "{{count}} acessos registrados neste espaço"
   },
   "marquee": {
-    "spell": "✦ pixel é símbolo ✦ bug é encantamento ✦ código é amuleto ✦ a internet que ficou pra trás ✦"
+    "spell": "signal • interface • arquitetura • leitura • consistência • código •"
   },
   "theme_toggle": {
     "to_light": "Alternar para tema claro",
@@ -48,6 +50,6 @@
     "error": "Não foi possível reproduzir o áudio. Tente novamente."
   },
   "footer": {
-    "copyright": "© Grimório.exe — todos os feitiços reservados"
+    "copyright": "© signal::archive — todos os direitos reservados"
   }
 }

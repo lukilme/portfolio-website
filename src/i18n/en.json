@@ -1,38 +1,40 @@
 {
   "site": {
-    "name": "Grimório.exe",
-    "tagline": "Distilling the internet that was left behind"
+    "name": "signal::archive",
+    "tagline": "Digital architecture with clarity and consistency"
   },
   "nav": {
     "home": "Home",
-    "manifesto": "Manifesto",
+    "manifesto": "About",
     "lab": "Lab"
   },
   "index": {
-    "hero_heading": "Grimório.exe",
-    "mission": "I distill the internet that was left behind and turn it into code amulets.",
+    "hero_heading": "signal::archive",
+    "mission": "I turn information architecture into functional, consistent interfaces with clear intent.",
     "contact_cta": "Get in touch",
-    "contact_email": "sorcerer@grimorio.exe",
+    "contact_email": "hello@signalarchive.dev",
     "featured_heading": "Featured Projects"
   },
   "manifesto": {
-    "heading": "Manifesto",
-    "body": "I don't create interfaces. I distill the internet that was left behind and turn it into code amulets. Every pixel is a symbol. Every bug, an enchantment."
+    "eyebrow": "About",
+    "heading": "Simple structures. Clear signals. Robust systems.",
+    "body": "I don't build rituals. I build clear, usable, coherent systems. Every interface decision exists to reduce noise, improve reading, and sharpen understanding."
   },
   "lab": {
-    "heading": "Lab",
-    "body": "This is the space where experiments take shape. Tools, rituals, and artefacts under construction — fragments of digital magic still being distilled."
+    "eyebrow": "Lab",
+    "heading": "Experiments in architecture, interface, and systems.",
+    "body": "This is the space where experiments take shape. Interfaces, systems, and structures in evolution — prototypes designed to be understood, tested, and refined."
   },
   "projects": {
-    "curse_label": "Curse",
-    "spellcast_label": "Spell Cast",
+    "curse_label": "Context",
+    "spellcast_label": "Execution",
     "result_label": "Result"
   },
   "visitor_counter": {
-    "label": "✨ {{count}} souls have wandered here ✨"
+    "label": "{{count}} visits recorded in this space"
   },
   "marquee": {
-    "spell": "✦ pixel is symbol ✦ bug is enchantment ✦ code is amulet ✦ the internet that was left behind ✦"
+    "spell": "signal • interface • architecture • reading • consistency • code •"
   },
   "theme_toggle": {
     "to_light": "Switch to light theme",
@@ -48,6 +50,6 @@
     "error": "Could not play audio. Please try again."
   },
   "footer": {
-    "copyright": "© Grimório.exe — all spells reserved"
+    "copyright": "© signal::archive — all rights reserved"
   }
 }
