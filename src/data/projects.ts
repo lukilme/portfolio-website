@@ -145,11 +145,11 @@ export const featuredProjects: Project[] = [
     ],
     tech: ['Python', 'Requests', 'Pandas', 'NumPy', 'Pillow', 'BeautifulSoup', 'GitHub API', 'GitHub Actions'],
     slides: [{
-      colorA: '#0f172a', colorB: '#34d399', alt: 'Prévia do README de GIFs para Perfil GitHub', src: '/public/images/project3.0.png',
+      colorA: '#0f172a', colorB: '#34d399', alt: 'Prévia do README de GIFs para Perfil GitHub', src: '/images/project3.0.png',
       id: "slide-7"
     },
     {
-      colorA: '#0f172a', colorB: '#34d399', alt: 'Prévia do GithubActions associados a atualização', src: '/public/images/project3.1.png',
+      colorA: '#0f172a', colorB: '#34d399', alt: 'Prévia do GithubActions associados a atualização', src: '/images/project3.1.png',
       id: "slide-8"
     }
   
@@ -158,7 +158,7 @@ export const featuredProjects: Project[] = [
       colorA: '#111111',
       colorB: '#7a7a7a',
       alt: 'Prévia do README de GIFs para Perfil GitHub',
-      src: '/public/images/project3.0.png',
+      src: '/images/project3.0.png',
     },
     copy: {
       pt: {
