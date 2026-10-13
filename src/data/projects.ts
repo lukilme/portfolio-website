@@ -48,6 +48,12 @@ export function getProjectCopy(project: Project, lang: ProjectLocale = 'pt'): Pr
   );
 }
 
+const withBase = (path: string) => {
+  const normalizedPath = path.replace(/^\//, '');
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  return `${base}/${normalizedPath}`;
+};
+
 export const featuredProjects: Project[] = [
   {
     slug: 'signal-archive',
@@ -145,11 +151,11 @@ export const featuredProjects: Project[] = [
     ],
     tech: ['Python', 'Requests', 'Pandas', 'NumPy', 'Pillow', 'BeautifulSoup', 'GitHub API', 'GitHub Actions'],
     slides: [{
-      colorA: '#0f172a', colorB: '#34d399', alt: 'Prévia do README de GIFs para Perfil GitHub', src: '/images/project3.0.png',
+      colorA: '#0f172a', colorB: '#34d399', alt: 'Prévia do README de GIFs para Perfil GitHub', src: withBase('images/project3.0.png'),
       id: "slide-7"
     },
     {
-      colorA: '#0f172a', colorB: '#34d399', alt: 'Prévia do GithubActions associados a atualização', src: '/images/project3.1.png',
+      colorA: '#0f172a', colorB: '#34d399', alt: 'Prévia do GithubActions associados a atualização', src: withBase('images/project3.1.png'),
       id: "slide-8"
     }
   
@@ -158,7 +164,7 @@ export const featuredProjects: Project[] = [
       colorA: '#111111',
       colorB: '#7a7a7a',
       alt: 'Prévia do README de GIFs para Perfil GitHub',
-      src: '/images/project3.0.png',
+      src: withBase('images/project3.0.png'),
     },
     copy: {
       pt: {
@@ -239,7 +245,7 @@ export const secondaryProjects: Project[] = [
       'A estrutura favorece acompanhamento contínuo e reduz a carga cognitiva de revisões manuais.',
       'Esse tipo de registro torna padrões recorrentes visíveis e mais fáceis de melhorar.'
     ],
-    image: { colorA: '#f5f5f0', colorB: '#7f7f7f', alt: 'Prévia do Signal Log', src: '/images/image.png' },
+    image: { colorA: '#f5f5f0', colorB: '#7f7f7f', alt: 'Prévia do Signal Log', src: withBase('images/image.png') },
     copy: {
       pt: {
         title: 'Signal Log',
