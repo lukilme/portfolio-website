@@ -34,7 +34,7 @@ const visualBackground =
     <header class="hero">
       <div class="hero-copy">
         <p class="eyebrow" data-i18n="projects.project_label">Projeto</p>
-        <h1 data-project-id={currentProject.slug} data-project-field="title">{currentProject.title}</h1>
+        <h2 data-project-id={currentProject.slug} data-project-field="title">{currentProject.title}</h2>
         <p class="summary" data-project-id={currentProject.slug} data-project-field="longDescription">{currentProject.longDescription}</p>
       </div>
 
@@ -103,16 +103,16 @@ const visualBackground =
     text-transform: uppercase;
   }
 
-  h1 {
+  h2 {
     margin: 0 0 1rem;
-    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-size: clamp(1.5rem, 4vw, 3rem);
     line-height: 1.05;
   }
 
   .summary {
     margin: 0;
     max-width: 42rem;
-    font-size: clamp(1.05rem, 2vw, 1.4rem);
+    font-size: clamp(1.00rem, 1.5vw, 1.0rem);
     line-height: 1.6;
   }
 

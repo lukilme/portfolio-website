@@ -132,42 +132,53 @@ export const featuredProjects: Project[] = [
     },
   },
   {
-    slug: 'system-notes',
-    number: '03',
-    title: 'System Notes',
-    description: 'Registro de padrões, documentação e decisões de produto em um sistema de referência simples.',
+    slug: 'github-gif-profile-generator',
+    number: '07',
+    title: 'Gerador Dinâmico de GIFs para Perfil GitHub',
+    description: 'Este projeto coleta métricas públicas do GitHub e transforma em GIFs animados para enriquecer e automatizar a apresentação de um perfil público no GitHub.',
     longDescription:
-      'Estrutura de documentação para registrar decisões de produto, padrões e fluxos recorrentes em um ambiente de trabalho colaborativo.',
+      'Solução em Python para extrair dados públicos do GitHub, processá-los e gerar animações visuais que funcionam como dashboard dinâmico para perfis de README.',
     details: [
-      'A documentação centraliza padrões e critérios de decisão para reduzir repetição e ambiguidade na execução.',
-      'As notas funcionam como base para avaliação, comunicação e manutenção de consistência ao longo do tempo.',
-      'O sistema ajuda a transformar conhecimento implícito em referência útil para o time e para o projeto.'
+      'A automação coleta métricas públicas via GitHub API e organiza a informação em estruturas analíticas para processamento e visualização.',
+      'O fluxo transforma os dados em gráficos e sequências de imagens, exportando GIFs prontos para publicação em perfis e portfolios.',
+      'A solução foi pensada para atualização recorrente e integração contínua com GitHub Actions, deixando o conteúdo sempre atualizado.',
     ],
-    tech: ['MDX', 'Docs', 'Design Ops'],
-    slides: [
-      { id: 'slide-7', colorA: '#111111', colorB: '#9a9a9a' },
-      { id: 'slide-8', colorA: '#f5f5f0', colorB: '#7a7a7a' },
-      { id: 'slide-9', colorA: '#302f2f', colorB: '#d0d0d0' },
-    ],
+    tech: ['Python', 'Requests', 'Pandas', 'NumPy', 'Pillow', 'BeautifulSoup', 'GitHub API', 'GitHub Actions'],
+    slides: [{
+      colorA: '#0f172a', colorB: '#34d399', alt: 'Prévia do README de GIFs para Perfil GitHub', src: '/public/images/project3.0.png',
+      id: "slide-7"
+    },
+    {
+      colorA: '#0f172a', colorB: '#34d399', alt: 'Prévia do GithubActions associados a atualização', src: '/public/images/project3.1.png',
+      id: "slide-8"
+    }
+  
+  ],
+  image: {
+      colorA: '#111111',
+      colorB: '#7a7a7a',
+      alt: 'Prévia do README de GIFs para Perfil GitHub',
+      src: '/public/images/project3.0.png',
+    },
     copy: {
       pt: {
-        title: 'System Notes',
-        description: 'Registro de padrões, documentação e decisões de produto em um sistema de referência simples.',
-        longDescription: 'Estrutura de documentação para registrar decisões de produto, padrões e fluxos recorrentes em um ambiente de trabalho colaborativo.',
+        title: 'Gerador Dinâmico de GIFs para Perfil GitHub',
+        description: 'Este projeto coleta métricas públicas do GitHub e transforma em GIFs animados para enriquecer e automatizar a apresentação de um perfil público no GitHub.',
+        longDescription: 'Solução em Python para extrair dados públicos do GitHub, processá-los e gerar animações visuais que funcionam como dashboard dinâmico para perfis de README.',
         details: [
-          'A documentação centraliza padrões e critérios de decisão para reduzir repetição e ambiguidade na execução.',
-          'As notas funcionam como base para avaliação, comunicação e manutenção de consistência ao longo do tempo.',
-          'O sistema ajuda a transformar conhecimento implícito em referência útil para o time e para o projeto.'
+          'A automação coleta métricas públicas via GitHub API e organiza a informação em estruturas analíticas para processamento e visualização.',
+          'O fluxo transforma os dados em gráficos e sequências de imagens, exportando GIFs prontos para publicação em perfis e portfolios.',
+          'A solução foi pensada para atualização recorrente e integração contínua com GitHub Actions, deixando o conteúdo sempre atualizado.',
         ],
       },
       en: {
-        title: 'System Notes',
-        description: 'Record of patterns, documentation, and product decisions in a simple reference system.',
-        longDescription: 'Documentation structure for recording product decisions, patterns, and recurring flows in a collaborative work environment.',
+        title: 'Dynamic GIF Generator for GitHub Profile',
+        description: 'This project collects public GitHub metrics and turns them into animated GIFs to enrich and automate the presentation of a public profile on GitHub.',
+        longDescription: 'Python solution to extract public GitHub data, process it, and generate animated visuals that act as a dynamic dashboard for README profiles.',
         details: [
-          'The documentation centralizes standards and decision criteria to reduce repetition and ambiguity in execution.',
-          'The notes work as a base for evaluation, communication, and the maintenance of consistency over time.',
-          'The system helps transform tacit knowledge into a useful reference for the team and the project.'
+          'The automation collects public metrics through the GitHub API and organizes the data into analytical structures for processing and visualization.',
+          'The workflow turns raw data into charts and image sequences, exporting GIFs ready for publishing in profiles and portfolios.',
+          'The solution was designed for recurring updates and continuous integration with GitHub Actions, keeping the content fresh and current.',
         ],
       },
     },
@@ -228,7 +239,7 @@ export const secondaryProjects: Project[] = [
       'A estrutura favorece acompanhamento contínuo e reduz a carga cognitiva de revisões manuais.',
       'Esse tipo de registro torna padrões recorrentes visíveis e mais fáceis de melhorar.'
     ],
-    image: { colorA: '#f5f5f0', colorB: '#7f7f7f', alt: 'Prévia do Signal Log', src: './public/images/image.png' },
+    image: { colorA: '#f5f5f0', colorB: '#7f7f7f', alt: 'Prévia do Signal Log', src: '/images/image.png' },
     copy: {
       pt: {
         title: 'Signal Log',
@@ -288,38 +299,38 @@ export const secondaryProjects: Project[] = [
       },
     },
   },
-    {
-    slug: 'signal-log',
-    number: '05',
-    title: 'Signal Log',
-    description: 'Registro visual de eventos, métricas e processos para análise contínua.',
+  {
+    slug: 'ux-library',
+    number: '06',
+    title: 'UX Library',
+    description: 'Coleção de componentes reutilizáveis para manter consistência de produto.',
     longDescription:
-      'Estrutura de observação para registrar eventos e métricas relevantes sem perder contexto operacional.',
+      'Biblioteca de padrões para garantir coerência visual, funcional e de linguagem em experiências digitais.',
     details: [
-      'A interface prioriza legibilidade do fluxo e destaca sinais que merecem atenção no processo de tomada de decisão.',
-      'A estrutura favorece acompanhamento contínuo e reduz a carga cognitiva de revisões manuais.',
-      'Esse tipo de registro torna padrões recorrentes visíveis e mais fáceis de melhorar.'
+      'A biblioteca facilita reutilização de blocos e reduz a chance de variação indevida de comportamento e estilo.',
+      'Ela funciona como referência para criação, revisão e implementação consistente em diferentes frentes do produto.',
+      'O valor principal está em estabilizar a base do produto sem travar a criatividade em cada nova iteração.'
     ],
-    image: { colorA: '#f5f5f0', colorB: '#7f7f7f', alt: 'Prévia do Signal Log', src: './public/images/image.png' },
+    image: { colorA: '#2d2d2d', colorB: '#bdbdbd', alt: 'Prévia da UX Library' },
     copy: {
       pt: {
-        title: 'Signal Log',
-        description: 'Registro visual de eventos, métricas e processos para análise contínua.',
-        longDescription: 'Estrutura de observação para registrar eventos e métricas relevantes sem perder contexto operacional.',
+        title: 'UX Library',
+        description: 'Coleção de componentes reutilizáveis para manter consistência de produto.',
+        longDescription: 'Biblioteca de padrões para garantir coerência visual, funcional e de linguagem em experiências digitais.',
         details: [
-          'A interface prioriza legibilidade do fluxo e destaca sinais que merecem atenção no processo de tomada de decisão.',
-          'A estrutura favorece acompanhamento contínuo e reduz a carga cognitiva de revisões manuais.',
-          'Esse tipo de registro torna padrões recorrentes visíveis e mais fáceis de melhorar.'
+          'A biblioteca facilita reutilização de blocos e reduz a chance de variação indevida de comportamento e estilo.',
+          'Ela funciona como referência para criação, revisão e implementação consistente em diferentes frentes do produto.',
+          'O valor principal está em estabilizar a base do produto sem travar a criatividade em cada nova iteração.'
         ],
       },
       en: {
-        title: 'Signal Log',
-        description: 'Visual record of events, metrics, and processes for continuous analysis.',
-        longDescription: 'Observation structure to log relevant events and metrics without losing operational context.',
+        title: 'UX Library',
+        description: 'Collection of reusable components to maintain product consistency.',
+        longDescription: 'Pattern library to ensure visual, functional, and language consistency across digital experiences.',
         details: [
-          'The interface prioritizes flow readability and highlights signals that deserve attention in the decision-making process.',
-          'The structure supports continuous tracking and reduces cognitive load during manual reviews.',
-          'This kind of record makes recurring patterns visible and easier to improve over time.'
+          'The library makes block reuse easier and reduces the risk of inconsistent behavior and styling.',
+          'It serves as a reference for creation, review, and consistent implementation across different product tracks.',
+          'Its main value is stabilizing the product foundation without limiting creativity in each iteration.'
         ],
       },
     },
