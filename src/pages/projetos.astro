@@ -156,9 +156,15 @@ const basePath = import.meta.env.BASE_URL || '/';
 
   .featured-list {
     display: grid;
+    align-items: stretch;
     gap: 3.5rem;
     padding-right: 10px;
     padding-bottom: 10px;
+  }
+
+  .featured-list li {
+    display: flex;
+    height: 100%;
   }
 
   .featured-block {
