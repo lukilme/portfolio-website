@@ -18,24 +18,42 @@ interface Props {
 }
 
 const { number, slug, title, description, tech = [], slides = [], href = '#' } = Astro.props;
-const safeSlides = slides.length > 0 ? slides : [{ id: 'fallback', colorA: '#111111', colorB: '#d9d9d1', alt: title }];
+
+// Sem imagens, o slide de reserva usa a cor do item (--accent, definida pela página)
+const safeSlides: Slide[] =
+  slides.length > 0
+    ? slides
+    : [{ id: 'fallback', colorA: 'var(--accent, #00e5ff)', colorB: '#05050a', alt: title }];
 const hasMany = safeSlides.length > 1;
-const techPalette = ['#facc15', '#7dd3fc', '#a78bfa', '#86efac', '#f9a8d4', '#fdba74', '#67e8f9', '#fca5a5', '#c4b5fd', '#bbf7d0'];
+
+const techPalette = ['#ffe600', '#00e5ff', '#9b6bff', '#7dff3a', '#ff2bd6', '#ff6a00', '#67e8f9', '#fca5a5', '#c4b5fd', '#bbf7d0'];
 
 const getTechStyle = (item: string, index: number) => {
   const hash = [...item].reduce((sum, char) => sum + char.charCodeAt(0), 0);
-  const tone = techPalette[(hash + index) % techPalette.length];
-
   return {
-    '--tech-bg': tone,
-    '--tech-border': tone,
-    '--tech-text': '#111111',
+    '--tech-bg': techPalette[(hash + index) % techPalette.length],
   } as const;
 };
 ---
 
 <article class="featured" data-carousel>
   <div class="visual">
+    <!-- Barra de título de janela: caminho + contador + controles -->
+    <div class="bar">
+      <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="path" aria-hidden="true">~/{slug ?? 'projeto'}/slides</span>
+
+      {hasMany && (
+        <div class="controls">
+          <span class="counter" aria-live="polite">
+            <span data-current>1</span>/{safeSlides.length}
+          </span>
+          <button type="button" data-dir="-1" aria-label="Imagem anterior">&lt;</button>
+          <button type="button" data-dir="1" aria-label="Próxima imagem">&gt;</button>
+        </div>
+      )}
+    </div>
+
     <div class="slides">
       {safeSlides.map((slide, i) => (
         <div
@@ -47,16 +65,6 @@ const getTechStyle = (item: string, index: number) => {
         </div>
       ))}
     </div>
-
-    {hasMany && (
-      <div class="controls">
-        <span class="counter" aria-live="polite">
-          <span data-current>1</span>/{safeSlides.length}
-        </span>
-        <button type="button" data-dir="-1" aria-label="Imagem anterior">←</button>
-        <button type="button" data-dir="1" aria-label="Próxima imagem">→</button>
-      </div>
-    )}
   </div>
 
   <div class="body">
@@ -93,12 +101,12 @@ const getTechStyle = (item: string, index: number) => {
       if (counter) counter.textContent = String(index + 1);
     };
 
+    const stop = () => window.clearInterval(timer);
     const start = () => {
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       stop();
       timer = window.setInterval(() => show(index + 1), 5000);
     };
-    const stop = () => window.clearInterval(timer);
 
     root.querySelectorAll<HTMLButtonElement>('[data-dir]').forEach((btn) =>
       btn.addEventListener('click', () => {
@@ -117,6 +125,9 @@ const getTechStyle = (item: string, index: number) => {
 
 <style>
   .featured {
+    --accent-local: var(--accent, var(--clr-accent, #00e5ff));
+    --on-accent-local: var(--on-accent, #05050a);
+
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -124,36 +135,130 @@ const getTechStyle = (item: string, index: number) => {
     height: 100%;
     min-height: 35rem;
     padding: 0.75rem;
-    border: 2px solid var(--clr-text);
+    border: 3px solid var(--clr-text);
     background: var(--clr-surface);
     color: var(--clr-text);
-    box-shadow: 8px 8px 0 var(--clr-text);
+    box-shadow: 8px 8px 0 var(--accent-local);
+    transition: transform 150ms steps(3), box-shadow 150ms steps(3);
   }
 
   :global(html.theme-light) .featured {
     background: #ffffff;
-    border-color: var(--clr-text);
-    box-shadow: 8px 8px 0 var(--clr-text);
   }
 
-  :global(html.theme-dark) .featured {
-    background: var(--clr-surface);
+  .featured:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 11px 11px 0 var(--accent-local);
   }
 
+  /* ---------- Janela de imagens ---------- */
   .visual {
     position: relative;
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    min-height: 20rem;
+    min-height: 28rem;
     overflow: hidden;
-    border: 2px solid var(--clr-text);
+    border: 3px solid var(--clr-text);
     background: var(--clr-bg);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2.5rem;
+    padding: 0.3rem 0.6rem;
+    border-bottom: 3px solid var(--clr-text);
+    background: var(--accent-local);
+    color: var(--on-accent-local);
+  }
+
+  .dots {
+    display: inline-flex;
+    gap: 0.3rem;
+  }
+
+  .dots i {
+    width: 0.6rem;
+    height: 0.6rem;
+    border: 2px solid var(--on-accent-local);
+    background: transparent;
+  }
+
+  .dots i:first-child {
+    background: var(--on-accent-local);
+  }
+
+  .path {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-left: auto;
+  }
+
+  .counter {
+    padding: 0.25rem 0.5rem;
+    border: 2px solid var(--on-accent-local);
+    background: var(--clr-surface);
+    color: var(--clr-text);
+    font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
+    font-size: 0.55rem;
+  }
+
+  .controls button {
+    width: 1.9rem;
+    height: 1.9rem;
+    border: 2px solid var(--on-accent-local);
+    background: var(--clr-surface);
+    color: var(--clr-text);
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .controls button:hover,
+  .controls button:focus-visible {
+    background: var(--on-accent-local);
+    color: var(--accent-local);
+  }
+
+  .controls button:focus-visible,
+  .detail-link:focus-visible {
+    outline: 3px dashed var(--clr-text);
+    outline-offset: 3px;
   }
 
   .slides {
     position: relative;
+    flex: 1;
     width: 100%;
-    height: 100%;
-    min-height: 24rem;
+    min-height: 20rem;
+  }
+
+  /* Scanlines sobre a imagem */
+  .slides::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0 2px,
+      rgba(0, 0, 0, 0.12) 2px 3px
+    );
   }
 
   .slide {
@@ -162,7 +267,7 @@ const getTechStyle = (item: string, index: number) => {
     width: 100%;
     height: 100%;
     opacity: 0;
-    transition: opacity 180ms ease;
+    transition: opacity 180ms steps(4);
   }
 
   .slide.active {
@@ -171,62 +276,12 @@ const getTechStyle = (item: string, index: number) => {
 
   .slide img {
     display: block;
-    width: 90%;
+    width: 100%;
     height: 100%;
-    margin: auto;
     object-fit: cover;
   }
 
-  .controls {
-    position: absolute;
-    right: 0.75rem;
-    bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .counter {
-    padding: 0.3rem 0.5rem;
-    border: 2px solid var(--clr-text);
-    background: var(--clr-surface);
-    font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
-    font-size: 0.55rem;
-  }
-
-  .controls button {
-    width: 2rem;
-    height: 2rem;
-    border: 2px solid var(--clr-text);
-    background: var(--clr-surface);
-    color: var(--clr-text);
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  :global(html.theme-light) .number{
-    color: var(--clr-text);
-  }
-
-  :global(html.theme-light) .controls button,
-  :global(html.theme-light) .detail-link,
-  :global(html.theme-light) .tech li {
-    background: var(--clr-bg);
-    color: var(--clr-text);
-  }
-
-  .controls button:hover {
-    background: var(--clr-accent);
-    color: var(--clr-bg);
-  }
-
-  :global(html.theme-light) .controls button:hover,
-  :global(html.theme-light) .detail-link:hover,
-  :global(html.theme-light) .detail-link:focus-visible {
-    background: var(--clr-accent);
-    color: var(--clr-bg);
-  }
-
+  /* ---------- Corpo ---------- */
   .body {
     display: flex;
     flex: 1 1 auto;
@@ -249,21 +304,22 @@ const getTechStyle = (item: string, index: number) => {
     min-height: 2.4rem;
     padding: 0 0.35rem;
     border: 2px solid var(--clr-text);
-    background: var(--clr-accent);
-    color: var(--clr-bg);
+    background: var(--accent-local);
+    color: var(--on-accent-local);
+    box-shadow: 3px 3px 0 var(--clr-text);
     font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
     font-size: 1rem;
   }
 
-  :global(html.theme-light) .badge {
-    background: var(--clr-text);
-  }
-
   .kicker {
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
     font-size: 0.8rem;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+  }
+
+  .kicker::before {
+    content: "// ";
+    opacity: 0.6;
   }
 
   h2 {
@@ -283,18 +339,20 @@ const getTechStyle = (item: string, index: number) => {
     flex-wrap: wrap;
     gap: 0.5rem;
     margin: 0;
-    padding: 0;
+    padding: 0.8rem 0 0;
+    border-top: 2px dashed var(--clr-text);
     list-style: none;
   }
 
   .tech li {
     padding: 0.2rem 0.55rem;
-    border: 2px solid var(--tech-border, var(--clr-text));
+    border: 2px solid var(--clr-text);
     background: var(--tech-bg, var(--clr-bg));
-    color: var(--tech-text, var(--clr-text));
+    color: var(--on-accent-local);
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
     font-size: 0.72rem;
     font-weight: 700;
-    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.15);
+    box-shadow: 2px 2px 0 var(--clr-text);
   }
 
   .detail-link {
@@ -302,30 +360,31 @@ const getTechStyle = (item: string, index: number) => {
     width: fit-content;
     align-items: center;
     justify-content: center;
-    margin-top: auto;
-    padding: 0.45rem 0.8rem;
-    border: 2px solid var(--clr-text);
-    background: var(--clr-bg);
-    color: var(--clr-text);
+    margin-top: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: 3px solid var(--clr-text);
+    background: var(--accent-local);
+    color: var(--on-accent-local);
+    box-shadow: 4px 4px 0 var(--clr-text);
     text-decoration: none;
     font-weight: 700;
+    transition: transform 120ms steps(2), box-shadow 120ms steps(2);
   }
 
   .detail-link:hover,
   .detail-link:focus-visible {
-    background: var(--clr-accent);
-    color: var(--clr-bg);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--clr-text);
   }
 
-  @media (min-width: 52rem) {
-    .featured {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
+  @media (prefers-reduced-motion: reduce) {
+    .featured,
+    .detail-link,
+    .slide {
+      transition: none;
     }
-
-    .visual {
-      min-height: 22rem;
+    .featured:hover {
+      transform: none;
     }
   }
 </style>

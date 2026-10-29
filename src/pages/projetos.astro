@@ -4,11 +4,16 @@ import ProjectSpotlightCard from '../components/projects/ProjectSpotlightCard.as
 import ProjectMiniCard from '../components/projects/ProjectMiniCard.astro';
 import { featuredProjects, secondaryProjects } from '../data/projects';
 
-const basePath = import.meta.env.BASE_URL || '/';
+// Sem barra final, para não gerar "//projetos" (URL protocol-relative)
+const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
+
+// Cada projeto recebe uma cor da paleta, em rodízio
+const palette = ['cyan', 'magenta', 'yellow', 'lime', 'orange', 'violet'];
+const accent = (i: number) => `--accent: var(--c-${palette[i % palette.length]})`;
 ---
 
 <Layout
-  title="Projetos | signal::archive"
+  title="Projetos | portfolio::archive"
   description="Projetos, experimentos e sistemas desenvolvidos com foco em clareza, arquitetura e interface."
   lang="pt"
 >
@@ -25,8 +30,9 @@ const basePath = import.meta.env.BASE_URL || '/';
       </div>
 
       <ul class="featured-list">
-        {featuredProjects.map((project) => (
-          <li>
+        {featuredProjects.map((project, i) => (
+          <li style={accent(i)}>
+            <span class="slot" aria-hidden="true">./{project.slug}</span>
             <ProjectSpotlightCard
               number={project.number}
               slug={project.slug}
@@ -34,7 +40,7 @@ const basePath = import.meta.env.BASE_URL || '/';
               description={project.description}
               tech={project.tech ?? []}
               slides={project.slides ?? []}
-              href={`${basePath}/projetos/${project.slug}`}
+              href={`${base}/projetos/${project.slug}`}
             />
           </li>
         ))}
@@ -48,15 +54,15 @@ const basePath = import.meta.env.BASE_URL || '/';
       </div>
 
       <ul class="mini-grid">
-        {secondaryProjects.map((project) => (
-          <li>
+        {secondaryProjects.map((project, i) => (
+          <li style={accent(i + featuredProjects.length)}>
             <ProjectMiniCard
               number={project.number}
               slug={project.slug}
               title={project.title}
               description={project.description}
               image={project.image}
-              href={`${basePath}/projetos/${project.slug}`}
+              href={`${base}/projetos/${project.slug}`}
             />
           </li>
         ))}
@@ -66,7 +72,21 @@ const basePath = import.meta.env.BASE_URL || '/';
 </Layout>
 
 <style>
+  /* ---------- Paleta ----------
+     Cores são sempre usadas como preenchimento ou sombra, com texto escuro por cima.
+     Se quiser reaproveitar no site todo, mova esse bloco para o CSS global (:root). */
   .page-shell {
+    --c-cyan: #00e5ff;
+    --c-magenta: #ff2bd6;
+    --c-yellow: #ffe600;
+    --c-lime: #7dff3a;
+    --c-orange: #ff6a00;
+    --c-violet: #9b6bff;
+    --on-accent: #05050a;
+    --accent: var(--c-cyan);
+
+    position: relative;
+    isolation: isolate;
     max-width: 72rem;
     margin: 0 auto;
     padding: 10vh 1.5rem 5rem;
@@ -78,17 +98,41 @@ const basePath = import.meta.env.BASE_URL || '/';
     background: linear-gradient(180deg, #f5f5f0 0%, #ffffff 100%);
   }
 
+  /* Grade cyber ao fundo */
+  .page-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(color-mix(in srgb, var(--c-cyan) 16%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--c-magenta) 12%, transparent) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* ---------- Cabeçalho da página ---------- */
   .page-header {
     max-width: 48rem;
     margin-bottom: 4rem;
   }
 
   .eyebrow {
+    display: inline-block;
     margin: 0 0 1.25rem;
-    color: var(--clr-accent);
+    padding: 0.45rem 0.7rem;
+    border: 2px solid var(--clr-text);
+    background: var(--c-lime);
+    color: var(--on-accent);
+    box-shadow: 3px 3px 0 var(--clr-text);
     font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
     font-size: 0.6rem;
     letter-spacing: 0.08em;
+  }
+
+  .eyebrow::before {
+    content: "$ ";
+    opacity: 0.7;
   }
 
   h1 {
@@ -97,61 +141,92 @@ const basePath = import.meta.env.BASE_URL || '/';
     line-height: 1.1;
   }
 
+  /* Barra segmentada em blocos duros, estilo pixel */
+  h1::after {
+    content: "";
+    display: block;
+    width: min(100%, 20rem);
+    height: 10px;
+    margin-top: 1.5rem;
+    background: linear-gradient(
+      90deg,
+      var(--c-cyan) 0 25%,
+      var(--c-magenta) 0 50%,
+      var(--c-yellow) 0 75%,
+      var(--c-lime) 0
+    );
+    border: 2px solid var(--clr-text);
+    box-sizing: content-box;
+  }
+
+  /* ---------- Cabeçalhos de bloco: barra de título de janela ---------- */
+  .block {
+    color: var(--clr-text);
+  }
+
   .block-head {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 1rem;
     margin-bottom: 1.75rem;
+    padding: 0.6rem 0.9rem;
+    border: 3px solid var(--clr-text);
+    background: var(--c-magenta);
+    color: var(--on-accent);
+    box-shadow: 6px 6px 0 var(--clr-text);
   }
 
-  .block-head::after {
-    content: "";
-    order: 1;
-    flex: 1;
-    height: 3px;
-    background: var(--clr-text);
+  .block-title {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--on-accent);
   }
 
   .block-count {
-    order: 2;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-width: 2.5rem;
     min-height: 2.5rem;
     padding: 0.35rem 0.5rem;
-    border: 2px solid var(--clr-text);
-    background: var(--clr-surface);
-    color: var(--clr-text);
+    border: 2px solid var(--on-accent);
+    background: var(--c-yellow);
+    color: var(--on-accent);
     font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
     font-size: 0.6rem;
-    box-shadow: 3px 3px 0 var(--clr-text);
+    box-shadow: 3px 3px 0 var(--on-accent);
   }
 
-  :global(html.theme-light) .block-count {
-    background: #ffffff;
-  }
-
-  .block-title {
-    margin: 0;
-    font-size: 1.25rem;
+  /* Bloco secundário: mais calmo, só contorno tracejado */
+  .block-head--quiet {
+    background: transparent;
     color: var(--clr-text);
-  }
-
-  .block-head--quiet::after {
-    height: 2px;
-    opacity: 0.6;
+    border: 2px dashed var(--c-cyan);
+    box-shadow: none;
   }
 
   .block-head--quiet .block-title {
     font-size: 1rem;
+    color: var(--clr-text);
   }
 
+  .block-head--quiet .block-count {
+    background: var(--c-cyan);
+    border-color: var(--clr-text);
+    box-shadow: 3px 3px 0 var(--clr-text);
+  }
+
+  /* ---------- Listas ---------- */
   .featured-list,
   .mini-grid {
     margin: 0;
     padding: 0;
     list-style: none;
+  }
+
+  .featured-block {
+    margin-bottom: 5rem;
   }
 
   .featured-list {
@@ -162,17 +237,32 @@ const basePath = import.meta.env.BASE_URL || '/';
     padding-bottom: 10px;
   }
 
-  .featured-list li {
+  .featured-list li,
+  .mini-grid li {
     display: flex;
+    flex-direction: column;
     height: 100%;
   }
 
-  .featured-block {
-    margin-bottom: 5rem;
+  /* O card ocupa o resto da altura do item */
+  .featured-list li > :global(*:last-child),
+  .mini-grid li > :global(*:last-child) {
+    flex: 1;
   }
 
-  .block {
-    color: var(--clr-text);
+  /* Aba com o caminho do projeto, na cor do item */
+  .slot {
+    align-self: flex-start;
+    margin-left: 1rem;
+    padding: 0.3rem 0.7rem;
+    border: 3px solid var(--clr-text);
+    border-bottom: 0;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.2;
   }
 
   .mini-grid {
@@ -181,5 +271,11 @@ const basePath = import.meta.env.BASE_URL || '/';
     gap: 1.5rem;
     padding-right: 5px;
     padding-bottom: 5px;
+  }
+
+  @media (max-width: 40rem) {
+    .page-shell { padding-inline: 1rem; }
+    .featured-list { gap: 2.5rem; }
+    .block-head { box-shadow: 4px 4px 0 var(--clr-text); }
   }
 </style>
