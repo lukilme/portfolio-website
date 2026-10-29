@@ -24,11 +24,11 @@ const isActive = (path: string) =>
 <header class="site-header">
   <!-- Linha de prompt: mostra a rota atual como um caminho de shell -->
   <div class="prompt" aria-hidden="true">
-    <span class="prompt-user">visitor@archive</span><span class="prompt-sep">:</span><span class="prompt-path">~{current || ''}</span><span class="prompt-sep">$</span>
+    <span class="prompt-user" data-i18n="header.prompt_user">visitor</span><span class="prompt-at">@</span><span class="prompt-host">archive</span><span class="prompt-sep">:</span><span class="prompt-path">~{current || ''}</span><span class="prompt-sep">$</span>
     <span class="cursor"></span>
   </div>
 
-  <a href={`${base}/`} class="site-logo" aria-label="portfolio::archive — página inicial">
+  <a href={`${base}/`} class="site-logo" data-i18n-aria-label="header.logo_home" aria-label="portfolio::archive — página inicial">
     portfolio::archive
   </a>
 
@@ -84,6 +84,26 @@ const isActive = (path: string) =>
     color: var(--clr-text);
   }
 
+  :global(html.theme-light) .site-header {
+    --glitch-a: #0f766e;
+    --glitch-b: #7c3aed;
+    --header-accent-1: #facc15;
+    --header-accent-2: #38bdf8;
+    --header-accent-3: #a78bfa;
+    --header-accent-4: #4ade80;
+    --header-accent-5: #f472b6;
+    --header-accent-6: #fb923c;
+    --header-accent-7: #7dd3fc;
+    --header-accent-8: #fda4af;
+    --header-accent-9: #c4b5fd;
+    --header-accent-10: #86efac;
+  }
+
+  :global(html.theme-light) nav a:hover,
+  :global(html.theme-light) nav a:focus-visible {
+    color: var(--clr-text);
+  }
+
   /* Scanlines sutis (CRT) */
   .site-header::before {
     content: "";
@@ -135,6 +155,15 @@ const isActive = (path: string) =>
   .prompt-user {
     font-weight: 700;
     color: var(--header-accent-2);
+  }
+
+  .prompt-host {
+    color: var(--header-accent-1);
+    font-weight: 700;
+  }
+
+  .prompt-at {
+    color: var(--header-accent-5);
   }
 
   .prompt-path {

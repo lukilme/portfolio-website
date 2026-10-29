@@ -3,6 +3,10 @@
     "name": "signal::archive",
     "tagline": "Digital architecture with clarity and consistency"
   },
+  "header": {
+    "prompt_user": "visitor",
+    "logo_home": "Home page"
+  },
   "nav": {
     "home": "Home",
     "projects": "Projects",
