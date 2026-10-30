@@ -1,0 +1,783 @@
+---
+/**
+ * SiteFooter.astro — signal::archive
+ * Brutalista + cyber + terminal + pixel.
+ *
+ * Usa as variáveis globais (--c-cyan, --c-magenta, --c-yellow, --c-lime,
+ * --c-orange, --c-violet, --on-accent). Se não existirem, cai nos valores padrão.
+ *
+ * i18n: mantém data-i18n="footer.copyright" e adiciona novas chaves
+ * (footer.nav, footer.status, footer.time, footer.session, footer.scroll,
+ *  footer.online, footer.top, footer.built). O texto em português é o fallback.
+ *
+ * Fontes opcionais (ficam melhores com elas, mas há fallback monoespaçado):
+ *   VT323 (corpo/terminal) e Press Start 2P (pixel/wordmark).
+ */
+
+interface FooterLink {
+  label: string;
+  href: string;
+  i18n?: string;
+  color?: 'cyan' | 'magenta' | 'yellow' | 'lime' | 'orange' | 'violet';
+  external?: boolean;
+}
+
+interface Props {
+  nav?: FooterLink[];
+  social?: FooterLink[];
+  version?: string;
+}
+
+const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
+
+const {
+  nav = [
+    { label: 'arquivo', href: `${base}/`, color: 'cyan', i18n: 'footer.link.archive' },
+    { label: 'projetos', href: `${base}/projetos`, color: 'magenta', i18n: 'footer.link.projects' },
+    { label: 'sobre', href: `${base}/manifesto`, color: 'yellow', i18n: 'footer.link.about' },
+    { label: 'laboratório', href: `${base}/lab`, color: 'lime', i18n: 'footer.link.lab' },
+  ],
+  social = [
+    { label: 'github', href: 'https://github.com/lukilme', color: 'lime', external: true },
+    { label: 'rss', href: `${base}/rss.xml`, color: 'orange' },
+    { label: 'email', href: 'mailto:ola@example.com', color: 'violet' },
+  ],
+  version = 'v1.0.0',
+}: Props = Astro.props;
+
+const year = new Date().getFullYear();
+
+/* Glifo de sinal em pixel art (9x7). 1 = pixel aceso. */
+const glyph = [
+  [0, 1, 1, 1, 1, 1, 1, 1, 0],
+  [1, 0, 0, 0, 0, 0, 0, 0, 1],
+  [0, 0, 1, 1, 1, 1, 1, 0, 0],
+  [0, 1, 0, 0, 0, 0, 0, 1, 0],
+  [0, 0, 0, 1, 1, 1, 0, 0, 0],
+  [0, 0, 1, 0, 0, 0, 1, 0, 0],
+  [0, 0, 0, 0, 1, 0, 0, 0, 0],
+];
+const rowColor = ['cyan', 'cyan', 'magenta', 'magenta', 'yellow', 'yellow', 'lime'];
+---
+
+
+<footer class="site-footer" data-footer>
+  <!-- faixa de dither com as 6 cores -->
+  <div class="dither" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <!-- ============ TERMINAL ============ -->
+    <section class="term" aria-label="Terminal">
+      <header class="term__bar">
+        <span class="term__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="term__title">signal-archive: ~/fim</span>
+        <span class="term__pid" aria-hidden="true">pid 0420</span>
+      </header>
+
+      <div class="term__body">
+        <p class="ln">
+          <span class="ps1" aria-hidden="true">
+            <span class="ps1__u">visitante</span><span class="ps1__at">@</span><span class="ps1__h">archive</span><span class="ps1__c">:</span><span class="ps1__p">~</span><span class="ps1__d">$</span>
+          </span>
+          <span class="cmd" aria-hidden="true">cat copyright.txt</span>
+        </p>
+
+        <p class="out">
+          <small data-i18n="footer.copyright">© signal::archive — é apenas o começo</small><span
+            class="cursor"
+            aria-hidden="true"></span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ GRID ============ -->
+    <div class="grid">
+      <!-- status -->
+      <section class="panel panel--status" aria-labelledby="f-status" style="--accent: var(--f-lime)">
+        <h2 class="panel__h" id="f-status"><span class="px-sq" aria-hidden="true"></span><span data-i18n="footer.status">status do sistema</span></h2>
+        <dl class="stats">
+          <div>
+            <dt data-i18n="footer.time">hora local</dt>
+            <dd data-clock>--:--:--</dd>
+          </div>
+          <div>
+            <dt data-i18n="footer.session">sessão</dt>
+            <dd data-session>00:00:00</dd>
+          </div>
+          <div>
+            <dt data-i18n="footer.scroll">scroll</dt>
+            <dd class="bar" data-scroll aria-hidden="true">[░░░░░░░░░░] 0%</dd>
+          </div>
+          <div>
+            <dt>sinal</dt>
+            <dd class="online"><span class="led" aria-hidden="true"></span><span data-i18n="footer.online">online</span></dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- navegação -->
+      <nav class="panel" aria-labelledby="f-nav" style="--accent: var(--f-cyan)">
+        <h2 class="panel__h" id="f-nav"><span class="px-sq" aria-hidden="true"></span><span data-i18n="footer.nav">navegar</span></h2>
+        <ul class="links">
+          {nav.map((l) => (
+            <li>
+              <a
+                class="link"
+                href={l.href}
+                style={`--accent: var(--f-${l.color ?? 'cyan'})`}
+                {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              >
+                <span {...(l.i18n ? { 'data-i18n': l.i18n } : {})}>{l.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <!-- sinais externos -->
+      <nav class="panel" aria-labelledby="f-out" style="--accent: var(--f-magenta)">
+        <h2 class="panel__h" id="f-out"><span class="px-sq" aria-hidden="true"></span><span data-i18n="footer.out">canais</span></h2>
+        <ul class="links">
+          {social.map((l) => (
+            <li>
+              <a
+                class="link"
+                href={l.href}
+                style={`--accent: var(--f-${l.color ?? 'magenta'})`}
+                {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              >
+                <span {...(l.i18n ? { 'data-i18n': l.i18n } : {})}>{l.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+
+    <!-- ============ WORDMARK ============ -->
+    <div class="mark">
+      <svg
+        class="glyph"
+        viewBox="0 0 9 7"
+        width="72"
+        height="56"
+        shape-rendering="crispEdges"
+        aria-hidden="true"
+        focusable="false"
+      >
+        {glyph.map((row, y) =>
+          row.map((on, x) =>
+            on ? <rect x={x} y={y} width="1" height="1" fill={`var(--f-${rowColor[y]})`} /> : null
+          )
+        )}
+      </svg>
+      <p class="wordmark" aria-hidden="true">
+        <span class="wordmark__a">signal</span><span class="wordmark__b">::archive</span>
+      </p>
+    </div>
+
+    <!-- ============ BARRA FINAL ============ -->
+    <div class="base">
+      <p class="meta">
+        <span>{year}</span>
+        <span class="sep" aria-hidden="true">//</span>
+        <span>{version}</span>
+        <span class="sep" aria-hidden="true">//</span>
+        <span><span data-i18n="footer.built">feito em Astro</span></span>
+      </p>
+      <button type="button" class="top" data-top>
+        <span aria-hidden="true">[^]</span> <span data-i18n="footer.top">voltar ao topo</span>
+      </button>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    /* aliases locais: usam as variáveis globais, com fallback */
+    --f-cyan: var(--c-cyan, #00e5ff);
+    --f-magenta: var(--c-magenta, #ff2bd6);
+    --f-yellow: var(--c-yellow, #ffe600);
+    --f-lime: var(--c-lime, #7dff3a);
+    --f-orange: var(--c-orange, #ff6a00);
+    --f-violet: var(--c-violet, #9b6bff);
+    --f-ink: var(--on-accent, #05050a);
+    --f-paper: #e9e9f2;
+    --f-dim: #9494ad;
+    --f-line: 4px;
+
+    position: relative;
+    margin-top: 6rem;
+    background: var(--f-ink);
+    color: var(--f-paper);
+    font-family: 'VT323', 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 1.2rem;
+    line-height: 1.4;
+    isolation: isolate;
+    overflow: hidden;
+    box-sizing: border-box;
+    max-width: 100%;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  .site-footer *,
+  .site-footer *::before,
+  .site-footer *::after {
+    box-sizing: border-box;
+  }
+
+  /* scanlines sutis */
+  .site-footer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0 3px,
+      rgb(255 255 255 / 0.035) 3px 4px
+    );
+  }
+
+  /* ---------- dither strip ---------- */
+  .dither {
+    height: 16px;
+    background:
+      repeating-conic-gradient(var(--f-ink) 0 25%, transparent 0 50%) 0 0 / 8px 8px,
+      linear-gradient(
+        90deg,
+        var(--f-cyan) 0 16.66%,
+        var(--f-magenta) 0 33.33%,
+        var(--f-yellow) 0 50%,
+        var(--f-lime) 0 66.66%,
+        var(--f-orange) 0 83.33%,
+        var(--f-violet) 0 100%
+      );
+    image-rendering: pixelated;
+    border-bottom: var(--f-line) solid var(--f-paper);
+  }
+
+  .wrap {
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2rem) calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .wrap > * {
+    min-width: 0;
+  }
+
+  /* ---------- terminal ---------- */
+  .term {
+    border: var(--f-line) solid var(--f-cyan);
+    background: #0a0a14;
+    box-shadow: 10px 10px 0 var(--f-magenta);
+    width: 100%;
+    max-width: 46rem;
+  }
+
+  .term__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.35rem 0.75rem;
+    background: var(--f-cyan);
+    color: var(--f-ink);
+    border-bottom: var(--f-line) solid var(--f-cyan);
+  }
+
+  .term__dots {
+    display: inline-flex;
+    gap: 6px;
+  }
+  .term__dots i {
+    width: 10px;
+    height: 10px;
+    background: var(--f-ink);
+    display: block;
+  }
+  .term__dots i:nth-child(2) {
+    background: var(--f-magenta);
+  }
+  .term__dots i:nth-child(3) {
+    background: var(--f-yellow);
+  }
+
+  .term__title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .term__pid {
+    opacity: 0.75;
+  }
+
+  .term__body {
+    padding: 1rem 1.1rem 1.1rem;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .ln,
+  .out {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .ps1__u {
+    color: var(--f-lime);
+  }
+  .ps1__at,
+  .ps1__c {
+    color: var(--f-dim);
+  }
+  .ps1__h {
+    color: var(--f-cyan);
+  }
+  .ps1__p {
+    color: var(--f-violet);
+  }
+  .ps1__d {
+    color: var(--f-yellow);
+    margin-left: 0.15em;
+  }
+  .cmd {
+    color: var(--f-paper);
+  }
+
+  .out small {
+    font-size: clamp(1.35rem, 3.2vw, 1.75rem);
+    line-height: 1.2;
+    color: var(--f-yellow);
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 0.6em;
+    height: 1.05em;
+    margin-left: 0.25em;
+    vertical-align: -0.15em;
+    background: var(--f-lime);
+    animation: blink 1.05s steps(1) infinite;
+  }
+
+  /* digitação: só quando o JS arma o efeito */
+  [data-footer].is-armed .out small {
+    clip-path: inset(0 100% 0 0);
+  }
+  [data-footer].is-live .out small {
+    animation: type 1.6s steps(34, end) 0.2s forwards;
+  }
+
+  @keyframes type {
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* ---------- grid ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+    gap: clamp(1.25rem, 3vw, 2rem);
+    align-items: start;
+  }
+
+  .panel {
+    --accent: var(--f-cyan);
+    border: var(--f-line) solid var(--accent);
+    padding: 0.9rem 1rem 1.1rem;
+    background: var(--f-ink);
+    box-shadow: 6px 6px 0 var(--accent);
+    margin: 0;
+  }
+
+  .panel__h {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 0 0.9rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px dashed var(--accent);
+    color: var(--accent);
+    font: inherit;
+    font-size: 1.35rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+
+  .px-sq {
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    box-shadow: 12px 0 0 -3px var(--accent);
+    margin-right: 10px;
+    flex: none;
+  }
+
+  /* ---------- status ---------- */
+  .stats {
+    margin: 0;
+    display: grid;
+    gap: 0.35rem;
+  }
+  .stats > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.1rem 1rem;
+    align-items: baseline;
+  }
+  .stats dt {
+    color: var(--f-dim);
+  }
+  .stats dt::after {
+    content: ' .....';
+    letter-spacing: -0.1em;
+    opacity: 0.4;
+  }
+  .stats dd {
+    margin: 0;
+    color: var(--f-paper);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .stats .bar {
+    color: var(--f-cyan);
+  }
+  .online {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--f-lime) !important;
+  }
+  .led {
+    width: 10px;
+    height: 10px;
+    background: var(--f-lime);
+    box-shadow: 0 0 0 2px var(--f-ink), 0 0 0 4px var(--f-lime);
+    animation: blink 1.6s steps(1) infinite;
+  }
+
+  /* ---------- links ---------- */
+  .links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .link {
+    --accent: var(--f-cyan);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    padding: 0.3rem 0.7rem;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    text-decoration: none;
+    background: transparent;
+    transition: transform 0.08s steps(2), box-shadow 0.08s steps(2);
+  }
+  .link::before {
+    content: './';
+    opacity: 0.6;
+  }
+  .link:hover {
+    background: var(--accent);
+    color: var(--f-ink);
+    transform: translate(-3px, -3px);
+    box-shadow: 4px 4px 0 var(--f-paper);
+  }
+  .link:hover::before {
+    opacity: 1;
+  }
+  .link:active {
+    transform: translate(0, 0);
+    box-shadow: none;
+  }
+
+  /* ---------- wordmark ---------- */
+  .mark {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 3vw, 2rem);
+    padding-block: 0.5rem;
+    border-top: var(--f-line) solid var(--f-paper);
+    border-bottom: var(--f-line) solid var(--f-paper);
+    padding: 1.25rem 0;
+  }
+  .glyph {
+    flex: none;
+    width: clamp(48px, 9vw, 96px);
+    height: auto;
+    image-rendering: pixelated;
+  }
+
+  .wordmark {
+    margin: 0;
+    font-family: 'Press Start 2P', 'VT323', ui-monospace, monospace;
+    font-size: clamp(1rem, 4.6vw, 2.75rem);
+    line-height: 1.35;
+    color: var(--f-paper);
+    text-shadow: 3px 3px 0 var(--f-magenta), 6px 6px 0 var(--f-cyan);
+    transition: text-shadow 0.1s steps(3);
+    overflow-wrap: anywhere;
+  }
+  .wordmark__a,
+  .wordmark__b {
+    display: block;
+  }
+  .wordmark__b {
+    color: var(--f-yellow);
+  }
+  .mark:hover .wordmark {
+    text-shadow: -3px 3px 0 var(--f-lime), -6px 6px 0 var(--f-violet);
+  }
+
+  /* ---------- base ---------- */
+  .base {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .meta {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    color: var(--f-dim);
+  }
+  .sep {
+    color: var(--f-orange);
+  }
+
+  .top {
+    font: inherit;
+    color: var(--f-ink);
+    background: var(--f-orange);
+    border: var(--f-line) solid var(--f-orange);
+    min-height: 2.75rem;
+    padding: 0.25rem 0.9rem;
+    cursor: pointer;
+    box-shadow: 5px 5px 0 var(--f-violet);
+    transition: transform 0.08s steps(2), box-shadow 0.08s steps(2);
+  }
+  .top:hover {
+    background: var(--f-yellow);
+    border-color: var(--f-yellow);
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 var(--f-violet);
+  }
+  .top:active {
+    transform: translate(5px, 5px);
+    box-shadow: 0 0 0 var(--f-violet);
+  }
+
+  /* ---------- foco visível ---------- */
+  .site-footer :is(a, button):focus-visible {
+    outline: 3px solid var(--f-yellow);
+    outline-offset: 3px;
+  }
+
+  /* ---------- tablet/mobile ---------- */
+  @media (max-width: 48rem) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .links {
+      grid-template-columns: repeat(auto-fit, minmax(min(8rem, 100%), 1fr));
+    }
+  }
+
+  @media (max-width: 36rem) {
+    .site-footer {
+      margin-top: 4rem;
+      font-size: 1.1rem;
+    }
+    .dither {
+      height: 12px;
+      background-size: 6px 6px, 100% 100%;
+    }
+    .term {
+      box-shadow: 5px 5px 0 var(--f-magenta);
+    }
+    .term__bar {
+      padding: 0.3rem 0.6rem;
+    }
+    .term__pid {
+      display: none;
+    }
+    .term__body {
+      padding: 0.8rem;
+    }
+    .panel {
+      padding: 0.75rem 0.8rem 0.9rem;
+      box-shadow: 4px 4px 0 var(--accent);
+    }
+    .stats .bar {
+      font-size: 1rem;
+    }
+    .mark {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.9rem;
+      padding: 1rem 0;
+    }
+    .glyph {
+      width: 56px;
+    }
+    .wordmark {
+      font-size: clamp(0.85rem, 5.4vw, 1.4rem);
+      text-shadow: 2px 2px 0 var(--f-magenta), 4px 4px 0 var(--f-cyan);
+    }
+    .base {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .top {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+      box-shadow: 4px 4px 0 var(--f-violet);
+    }
+  }
+
+  @media (max-width: 22rem) {
+    .links {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .ps1__h {
+      display: none;
+    }
+    .ps1__at {
+      display: none;
+    }
+  }
+
+  /* sem hover (touch): não "salta" ao tocar */
+  @media (hover: none) {
+    .link:hover,
+    .top:hover {
+      transform: none;
+    }
+    .link:hover {
+      box-shadow: none;
+    }
+    .top:hover {
+      box-shadow: 4px 4px 0 var(--f-violet);
+    }
+    .mark:hover .wordmark {
+      text-shadow: 3px 3px 0 var(--f-magenta), 6px 6px 0 var(--f-cyan);
+    }
+  }
+
+  /* ---------- movimento reduzido ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .cursor,
+    .led {
+      animation: none;
+    }
+    [data-footer].is-armed .out small {
+      clip-path: none;
+    }
+    [data-footer].is-live .out small {
+      animation: none;
+    }
+    .link,
+    .top,
+    .wordmark {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  function initFooter() {
+    const root = document.querySelector<HTMLElement>('[data-footer]');
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = '1';
+
+    const clock = root.querySelector<HTMLElement>('[data-clock]');
+    const session = root.querySelector<HTMLElement>('[data-session]');
+    const scroll = root.querySelector<HTMLElement>('[data-scroll]');
+    const top = root.querySelector<HTMLButtonElement>('[data-top]');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const start = Date.now();
+
+    /* relógio + sessão */
+    const tick = () => {
+      const d = new Date();
+      if (clock) clock.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+      if (session) {
+        const s = Math.floor((Date.now() - start) / 1000);
+        session.textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor((s % 3600) / 60))}:${pad(s % 60)}`;
+      }
+    };
+    tick();
+    const timer = window.setInterval(tick, 1000);
+
+    /* barra de scroll em blocos */
+    const mq = window.matchMedia('(max-width: 36rem)');
+    const draw = () => {
+      const SEG = mq.matches ? 6 : 10;
+      if (!scroll) return;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = max > 0 ? Math.min(100, Math.round((window.scrollY / max) * 100)) : 100;
+      const filled = Math.round((pct / 100) * SEG);
+      scroll.textContent = `[${'█'.repeat(filled)}${'░'.repeat(SEG - filled)}] ${pct}%`;
+    };
+    draw();
+    window.addEventListener('scroll', draw, { passive: true });
+    window.addEventListener('resize', draw, { passive: true });
+
+    /* digitação do copyright ao entrar na tela */
+    if (!reduce && 'IntersectionObserver' in window) {
+      root.classList.add('is-armed');
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            root.classList.add('is-live');
+            io.disconnect();
+          }
+        },
+        { threshold: 0.35 }
+      );
+      io.observe(root);
+    }
+
+    /* voltar ao topo */
+    top?.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    });
+
+    /* limpeza para View Transitions */
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        window.clearInterval(timer);
+        window.removeEventListener('scroll', draw);
+        window.removeEventListener('resize', draw);
+      },
+      { once: true }
+    );
+  }
+
+  initFooter();
+  document.addEventListener('astro:page-load', initFooter);
+</script>

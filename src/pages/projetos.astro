@@ -22,7 +22,7 @@ const accent = (i: number) => `--accent: var(--c-${palette[i % palette.length]})
       <p class="eyebrow" data-i18n="projects.eyebrow">Projetos</p>
       <h1 data-i18n="projects.heading">Sistemas, protótipos e interfaces em produção.</h1>
     </header>
-
+    
     <section class="block featured-block" aria-labelledby="featured-title">
       <div class="block-head">
         <h2 id="featured-title" class="block-title" data-i18n="projects.featured_title">Projetos em destaque</h2>
@@ -47,11 +47,15 @@ const accent = (i: number) => `--accent: var(--c-${palette[i % palette.length]})
       </ul>
     </section>
 
+    <div class="color-stripe" aria-hidden="true"></div> 
+
     <section class="block secondary-block" aria-labelledby="secondary-title">
       <div class="block-head block-head--quiet">
         <h2 id="secondary-title" class="block-title" data-i18n="projects.secondary_title">Outros trabalhos</h2>
         <span class="block-count">{String(secondaryProjects.length).padStart(2, '0')}</span>
       </div>
+
+      <div class="dither" aria-hidden="true"></div>
 
       <ul class="mini-grid">
         {secondaryProjects.map((project, i) => (
@@ -72,9 +76,7 @@ const accent = (i: number) => `--accent: var(--c-${palette[i % palette.length]})
 </Layout>
 
 <style>
-  /* ---------- Paleta ----------
-     Cores são sempre usadas como preenchimento ou sombra, com texto escuro por cima.
-     Se quiser reaproveitar no site todo, mova esse bloco para o CSS global (:root). */
+
   .page-shell {
     --c-cyan: #00e5ff;
     --c-magenta: #ff2bd6;
@@ -92,10 +94,59 @@ const accent = (i: number) => `--accent: var(--c-${palette[i % palette.length]})
     padding: 10vh 1.5rem 5rem;
     color: var(--clr-text);
     background: var(--clr-bg);
+
+
+
   }
+  
 
   :global(html.theme-light) .page-shell {
     background: linear-gradient(180deg, #f5f5f0 0%, #ffffff 100%);
+  }
+
+
+  .dither {
+    display: block;
+    width: 100%;
+    height: 16px;
+    margin: 0 0 1.75rem;
+    --f-cyan: var(--c-cyan, #00e5ff);
+    --f-magenta: var(--c-magenta, #ff2bd6);
+    --f-yellow: var(--c-yellow, #ffe600);
+    --f-lime: var(--c-lime, #7dff3a);
+    --f-orange: var(--c-orange, #ff6a00);
+    --f-violet: var(--c-violet, #9b6bff);
+    --f-ink: var(--on-accent, #05050a);
+    --f-paper: #e9e9f2;
+    --f-line: 4px;
+    background:
+      repeating-conic-gradient(var(--f-ink) 0 25%, transparent 0 50%) 0 0 / 8px 8px,
+      linear-gradient(
+        90deg,
+        var(--f-cyan) 0 16.66%,
+        var(--f-magenta) 0 33.33%,
+        var(--f-yellow) 0 50%,
+        var(--f-lime) 0 66.66%,
+        var(--f-orange) 0 83.33%,
+        var(--f-violet) 0 100%
+      );
+    image-rendering: pixelated;
+    border-bottom: var(--f-line) solid var(--f-paper);
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dither::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0 3px,
+      rgb(255 255 255 / 0.035) 3px 4px
+    );
+    pointer-events: none;
   }
 
   /* Grade cyber ao fundo */

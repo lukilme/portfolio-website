@@ -1,53 +1,341 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
 import '../styles/global.css';
 
 interface Props {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   lang?: 'pt' | 'en';
 }
 
-const { title, description, lang = 'pt' } = Astro.props;
+const {
+  title = 'portfolio::archive',
+  description = 'Portfolio pessoal e archive de projetos, interfaces e pensamento digital.',
+  lang = 'pt',
+} = Astro.props;
+const path = Astro.url.pathname === '/' ? '~' : `~${Astro.url.pathname.replace(/\/$/, '')}`;
 ---
 
 <!doctype html>
 <html lang={lang} class="theme-dark">
   <head>
     <BaseHead title={title} description={description} lang={lang} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Press+Start+2P&display=swap"
+    />
+
     <script is:inline>
-      try {
-        const stored = localStorage.getItem('grm-lang');
-        const language = stored === 'en' || stored === 'pt' ? stored : 'pt';
-        document.documentElement.lang = language;
-        window.__grm_lang = language;
-      } catch (_) {
-        document.documentElement.lang = 'pt';
-        window.__grm_lang = 'pt';
-      }
+      // Idioma + decisão do boot, antes da primeira pintura (evita flash).
+      (function () {
+        var root = document.documentElement;
+        try {
+          var stored = localStorage.getItem('grm-lang');
+          var language = stored === 'en' || stored === 'pt' ? stored : 'pt';
+          root.lang = language;
+          window.__grm_lang = language;
+        } catch (_) {
+          root.lang = 'pt';
+          window.__grm_lang = 'pt';
+        }
+        try {
+          var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (!calm && !sessionStorage.getItem('grm-boot')) root.classList.add('has-boot');
+        } catch (_) {}
+      })();
     </script>
   </head>
+
   <body>
+    <!-- Barra de progresso de scroll (em degraus de pixel) -->
+    <div class="scroll-meter" aria-hidden="true"><i id="scroll-fill"></i></div>
+
+    <!-- Sequência de boot: aparece uma vez por sessão e some sozinha -->
+    <div id="boot" class="boot" aria-hidden="true">
+      <pre id="boot-log" class="boot__log"></pre>
+      <div class="boot__bar"><i id="boot-fill"></i></div>
+      <small class="boot__skip" data-pt="[ clique ou tecle para pular ]" data-en="[ click or press a key to skip ]">
+        [ clique ou tecle para pular ]
+      </small>
+    </div>
+
+    <a class="skip-link" href="#conteudo" data-pt="Pular para o conteúdo" data-en="Skip to content">
+      Pular para o conteúdo
+    </a>
+
+    <!-- Barra de sistema -->
+    <!-- <div class="sys-bar" role="presentation">
+      <span class="sys-bar__prompt">
+        <b>grm@sys</b><span class="sys-bar__sep">:</span><span class="sys-bar__path">{path}</span><span class="sys-bar__sep">$</span><span class="sys-bar__caret"></span>
+      </span>
+      <span class="sys-bar__status">
+        <i class="sys-bar__dot"></i>
+        <span data-pt="sistema online" data-en="system online">sistema online</span>
+      </span>
+      <span class="sys-bar__meta">
+        <span id="sys-clock">--:--:--</span>
+        <span class="sys-bar__pct"><span id="sys-pct">000</span>%</span>
+      </span>
+    </div> -->
+
     <Header />
-    <main class="site-main">
+
+    <main id="conteudo" class="site-main" tabindex="-1">
       <slot />
     </main>
-    <footer class="site-footer">
-      <small data-i18n="footer.copyright">© signal::archive — é apenas o começo</small>
-    </footer>
+
+    <!-- <div class="color-stripe" aria-hidden="true"></div> -->
+    <Footer />
   </body>
 </html>
 
-<style>
-  .site-main {
-    min-height: calc(100dvh - 8rem);
+<script>
+  // ---------- Textos bilíngues da casca (layout) ----------
+  const root = document.documentElement;
+
+  function applyLang() {
+    const l = root.lang === 'en' ? 'en' : 'pt';
+    document.querySelectorAll<HTMLElement>('[data-pt][data-en]').forEach((el) => {
+      el.textContent = el.dataset[l] ?? el.textContent;
+    });
+  }
+  applyLang();
+  new MutationObserver(applyLang).observe(root, { attributes: true, attributeFilter: ['lang'] });
+
+  // ---------- Relógio + progresso de scroll ----------
+  const clock = document.getElementById('sys-clock');
+  const pct = document.getElementById('sys-pct');
+  const fill = document.getElementById('scroll-fill');
+
+  function tick() {
+    if (clock) clock.textContent = new Date().toLocaleTimeString('pt-BR', { hour12: false });
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  let queued = false;
+  function paintScroll() {
+    queued = false;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const p = max > 0 ? Math.min(100, Math.max(0, (window.scrollY / max) * 100)) : 0;
+    const stepped = Math.round(p / 4) * 4; // degraus de 4% = visual pixelado
+    if (fill) fill.style.width = `${stepped}%`;
+    if (pct) pct.textContent = String(Math.round(p)).padStart(3, '0');
+  }
+  function onScroll() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(paintScroll);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  paintScroll();
+
+  // ---------- Boot ----------
+  const boot = document.getElementById('boot');
+  const log = document.getElementById('boot-log');
+  const bar = document.getElementById('boot-fill');
+
+  if (boot && log && bar && root.classList.contains('has-boot')) {
+    const en = root.lang === 'en';
+    const lines = [
+      '> GRM_OS v2.6 // boot',
+      en ? '> mounting /dev/portfolio ........ [ OK ]' : '> montando /dev/portfolio ........ [ OK ]',
+      en ? '> loading palette: cyan magenta yellow lime orange violet' : '> carregando paleta: ciano magenta amarelo lime laranja violeta',
+      en ? '> pixel renderer ................. [ OK ]' : '> renderizador de pixels ......... [ OK ]',
+      en ? '> ready.' : '> pronto.',
+    ];
+
+    let i = 0;
+    let done = false;
+    let timer = 0;
+
+    const finish = () => {
+      if (done) return;
+      done = true;
+      clearInterval(timer);
+      try { sessionStorage.setItem('grm-boot', '1'); } catch (_) {}
+      boot.classList.add('boot--out');
+      window.setTimeout(() => {
+        root.classList.remove('has-boot');
+        boot.remove();
+      }, 260);
+    };
+
+    timer = window.setInterval(() => {
+      if (i < lines.length) {
+        log.textContent += (i ? '\n' : '') + lines[i];
+        i += 1;
+        bar.style.width = `${Math.round((i / lines.length) * 100 / 10) * 10}%`;
+      } else {
+        finish();
+      }
+    }, 170);
+
+    boot.addEventListener('click', finish);
+    window.addEventListener('keydown', finish, { once: true });
+  }
+</script>
+
+<!-- ======================= TOKENS + UTILITÁRIOS GLOBAIS ======================= -->
+<style is:global>
+  :root {
+    /* Paleta neon */
+    --c-cyan: #00e5ff;
+    --c-magenta: #ff2bd6;
+    --c-yellow: #ffe600;
+    --c-lime: #7dff3a;
+    --c-orange: #ff6a00;
+    --c-violet: #9b6bff;
+    --on-accent: #05050a;
+
+    /* Tipografia */
+    --font-pixel: 'Press Start 2P', 'Microsoft Sans Serif', monospace;
+    --font-term: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+    /* Estrutura brutalista */
+    --bw: 3px;
+    --px: 4px; /* "pixel" base para degraus e sombras */
+    --focus: var(--c-yellow);
+    --sys-h: 2rem;
   }
 
+  html.theme-dark {
+    --clr-bg: #07070d;
+    --clr-surface: #0f0f1a;
+    --clr-text: #f2f2ea;
+    --clr-muted: #8b8ba3;
+    --clr-line: rgba(0, 229, 255, 0.09);
+    --scan: rgba(0, 0, 0, 0.22);
+    --shadow-hard: 6px 6px 0 var(--c-magenta);
+  }
+
+  html.theme-light {
+    --clr-bg: #f3f1e7;
+    --clr-surface: #ffffff;
+    --clr-text: #05050a;
+    --clr-muted: #55556a;
+    --clr-line: rgba(5, 5, 10, 0.07);
+    --scan: rgba(5, 5, 10, 0.05);
+    --shadow-hard: 6px 6px 0 var(--on-accent);
+    --focus: var(--c-violet);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    color-scheme: dark light;
+  }
+
+  html.theme-dark { color-scheme: dark; }
+  html.theme-light { color-scheme: light; }
+
+  body {
+    margin: 0;
+    background-color: var(--clr-bg);
+    /* grade de pixels */
+    background-image:
+      linear-gradient(var(--clr-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--clr-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    color: var(--clr-text);
+    font-family: var(--font-term);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeSpeed;
+  }
+
+  /* Scanlines CRT (decorativo) */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9990;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 2px,
+      var(--scan) 3px
+    );
+  }
+
+  ::selection {
+    background: var(--c-magenta);
+    color: var(--on-accent);
+  }
+
+  :focus-visible {
+    outline: var(--bw) solid var(--focus);
+    outline-offset: 3px;
+  }
+
+
+  * { scrollbar-width: thin; scrollbar-color: var(--c-cyan) var(--clr-surface); }
+  ::-webkit-scrollbar { width: 14px; height: 14px; }
+  ::-webkit-scrollbar-track { background: var(--clr-surface); border-left: 2px solid var(--clr-text); }
+  ::-webkit-scrollbar-thumb { background: var(--c-cyan); border: 2px solid var(--on-accent); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--c-magenta); }
+
+  /* ---------- Utilitários reaproveitáveis em outros componentes ---------- */
+
+  /* Cantos "mordidos" em degraus de pixel */
+  .px-notch {
+    --n: var(--px);
+    clip-path: polygon(
+      0 var(--n), var(--n) var(--n), var(--n) 0,
+      calc(100% - var(--n)) 0, calc(100% - var(--n)) var(--n), 100% var(--n),
+      100% calc(100% - var(--n)), calc(100% - var(--n)) calc(100% - var(--n)), calc(100% - var(--n)) 100%,
+      var(--n) 100%, var(--n) calc(100% - var(--n)), 0 calc(100% - var(--n))
+    );
+  }
+
+  /* Caixa brutalista com sombra dura */
+  .brut-box {
+    border: var(--bw) solid var(--clr-text);
+    background: var(--clr-surface);
+    box-shadow: var(--shadow-hard);
+  }
+
+  /* Prompt de terminal antes do texto */
+  .t-prompt::before {
+    content: '> ';
+    color: var(--c-lime);
+    font-weight: 800;
+  }
+
+  /* Cursor piscante */
+  .t-caret::after {
+    content: '';
+    display: inline-block;
+    width: 0.6em;
+    height: 1em;
+    margin-left: 0.2em;
+    vertical-align: -0.12em;
+    background: var(--c-lime);
+    animation: caret 1s steps(1) infinite;
+  }
+
+  /* Glitch RGB apenas ao passar o mouse/foco */
+  .glitch { position: relative; }
+  .glitch:hover,
+  .glitch:focus-visible {
+    text-shadow: 3px 0 var(--c-magenta), -3px 0 var(--c-cyan);
+  }
+
+  @keyframes caret { 50% { opacity: 0; } }
+
+  /* ---------- Footer (agora realmente estilizado, pois vem de outro componente) ---------- */
   .site-footer {
-    margin-top: 2rem;
-    padding: 1.25rem 1rem;
-    border-top: 3px solid var(--clr-text);
+    margin-top: 0;
+    padding: 1.5rem 1rem;
+    border-top: var(--bw) solid var(--clr-text);
     background: var(--clr-surface);
     color: var(--clr-text);
     text-align: center;
@@ -55,25 +343,199 @@ const { title, description, lang = 'pt' } = Astro.props;
   }
 
   .site-footer small {
-    margin-top: 1rem;
-    margin-bottom: 4rem;
+    margin: 1rem 0 4rem;
     display: inline-block;
-    padding: 0.4rem 0.75rem;
+    padding: 0.55rem 0.9rem;
     border: 2px solid var(--clr-text);
     background: var(--clr-bg);
+    box-shadow: 4px 4px 0 var(--c-cyan);
     color: var(--clr-text);
-    font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
-    font-size: 1rem;
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    line-height: 1.6;
+    line-height: 1.8;
   }
 
-  :global(html.theme-light) .site-footer {
-    background: #ffffff;
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .t-caret::after { animation: none; }
+  }
+</style>
+
+<!-- ======================= ESTILOS DO LAYOUT ======================= -->
+<style>
+  .site-main {
+    min-height: calc(100dvh - 8rem);
+    outline: none;
   }
 
-  :global(html.theme-light) .site-footer small {
-    background: #f5f5f0;
+  /* Skip link */
+  .skip-link {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 10000;
+    padding: 0.6rem 0.9rem;
+    border: var(--bw) solid var(--on-accent);
+    background: var(--c-yellow);
+    color: var(--on-accent);
+    font-family: var(--font-pixel);
+    font-size: 0.65rem;
+    text-decoration: none;
+    transform: translateY(-200%);
+  }
+  .skip-link:focus { transform: none; }
+
+  /* Medidor de scroll */
+  .scroll-meter {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 9995;
+    height: 5px;
+    background: var(--on-accent);
+    pointer-events: none;
+  }
+  .scroll-meter i {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      var(--c-cyan) 0 16.66%,
+      var(--c-magenta) 0 33.33%,
+      var(--c-yellow) 0 50%,
+      var(--c-lime) 0 66.66%,
+      var(--c-orange) 0 83.33%,
+      var(--c-violet) 0
+    );
+    background-size: 100vw 100%;
+  }
+
+  /* Barra de sistema (sempre escura, nos dois temas) */
+  .sys-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: var(--sys-h);
+    padding: 0.35rem 1rem;
+    margin-top: 5px;
+    border-bottom: var(--bw) solid var(--c-cyan);
+    background: var(--on-accent);
+    color: #d8d8e6;
+    font-family: var(--font-term);
+    font-size: 0.72rem;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .sys-bar__prompt { display: inline-flex; align-items: center; min-width: 0; overflow: hidden; }
+  .sys-bar__prompt b { color: var(--c-lime); font-weight: 800; }
+  .sys-bar__sep { color: var(--c-magenta); margin: 0 0.15rem; }
+  .sys-bar__path { color: var(--c-cyan); overflow: hidden; text-overflow: ellipsis; }
+
+  .sys-bar__caret {
+    display: inline-block;
+    width: 0.55em;
+    height: 1em;
+    margin-left: 0.35rem;
+    background: var(--c-yellow);
+    animation: blink 1s steps(1) infinite;
+  }
+
+  .sys-bar__status { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--c-lime); }
+  .sys-bar__dot {
+    width: 8px;
+    height: 8px;
+    background: var(--c-lime);
+    box-shadow: 0 0 0 2px var(--on-accent), 0 0 0 4px var(--c-lime);
+    animation: blink 2s steps(1) infinite;
+  }
+
+  .sys-bar__meta { display: inline-flex; gap: 0.9rem; color: var(--c-yellow); font-variant-numeric: tabular-nums; }
+  .sys-bar__pct { color: var(--c-orange); }
+
+  @media (max-width: 640px) {
+    .sys-bar__status { display: none; }
+    .sys-bar { padding-inline: 0.75rem; }
+  }
+
+  /* Faixa de cores antes do footer */
+  .color-stripe {
+    height: 14px;
+    border-top: var(--bw) solid var(--clr-text);
+    background:
+      repeating-linear-gradient(90deg, transparent 0 14px, var(--on-accent) 14px 16px),
+      linear-gradient(
+        90deg,
+        var(--c-cyan) 0 16.66%,
+        var(--c-magenta) 0 33.33%,
+        var(--c-yellow) 0 50%,
+        var(--c-lime) 0 66.66%,
+        var(--c-orange) 0 83.33%,
+        var(--c-violet) 0
+      );
+    margin-top: 2rem;
+  }
+
+  /* Boot */
+  .boot {
+    display: none;
+  }
+
+  :global(html.has-boot) .boot {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.25rem;
+    padding: 1.5rem clamp(1rem, 6vw, 4rem);
+    background: var(--on-accent);
+    color: var(--c-lime);
+    cursor: pointer;
+    /* rede de segurança: some sozinho mesmo se o JS falhar */
+    animation: boot-failsafe 0s linear 3.5s forwards;
+  }
+
+  .boot--out { opacity: 0; transition: opacity 0.25s steps(4); }
+
+  .boot__log {
+    margin: 0;
+    min-height: 8.5em;
+    font-family: var(--font-term);
+    font-size: clamp(0.75rem, 2.4vw, 1rem);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    color: var(--c-lime);
+  }
+
+  .boot__bar {
+    height: 18px;
+    border: var(--bw) solid var(--c-cyan);
+    background: transparent;
+  }
+  .boot__bar i {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: repeating-linear-gradient(90deg, var(--c-cyan) 0 10px, var(--on-accent) 10px 12px);
+  }
+
+  .boot__skip {
+    color: var(--c-yellow);
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    line-height: 1.8;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes boot-failsafe { to { visibility: hidden; pointer-events: none; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sys-bar__caret,
+    .sys-bar__dot { animation: none; }
   }
 </style>

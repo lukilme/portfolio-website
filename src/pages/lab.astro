@@ -7,62 +7,191 @@ import Layout from '../layouts/Layout.astro';
   description="Um laboratório de arquitetura de informação, protótipos e interfaces em evolução."
   lang="pt"
 >
-  <section class="page-shell">
-    <p class="eyebrow" data-i18n="lab.eyebrow">Laboratório</p>
-    <h1 data-i18n="lab.heading">Experimentos em arquitetura, interface e sistemas.</h1>
-    <p class="intro" data-i18n="lab.body">
-      Este é o espaço onde experimentos ganham forma. Estruturas, interfaces e sistemas em evolução —
-      protótipos pensados para ser entendidos, testados e melhorados.
-    </p>
+  <main class="page-shell">
+    <header class="page-header">
+      <p class="eyebrow" data-i18n="lab.eyebrow">Laboratório</p>
+      <h1 data-i18n="lab.heading">Experimentos em arquitetura, interface e sistemas.</h1>
+    </header>
 
-    <div class="lab-grid">
-      <article class="lab-card">
-        <span class="tag">01</span>
-        <h2>Arquitetura</h2>
-        <p>
-          Estruturas simples, narrativas claras e interfaces que respeitam o comportamento do usuário.
-        </p>
-      </article>
+    <section class="block intro-block" aria-labelledby="lab-intro-title">
+      <div class="block-head">
+        <h2 id="lab-intro-title" class="block-title">Notas de processo</h2>
+        <span class="block-count">03</span>
+      </div>
 
-      <article class="lab-card">
-        <span class="tag">02</span>
-        <h2>Interface</h2>
-        <p>
-          Contraste, ritmo visual e hierarquia funcional para comunicar sem ruído.
+      <div class="intro-panel">
+        <p class="intro" data-i18n="lab.body">
+          Este é o espaço onde experimentos ganham forma. Estruturas, interfaces e sistemas em evolução —
+          protótipos pensados para ser entendidos, testados e melhorados.
         </p>
-      </article>
 
-      <article class="lab-card">
-        <span class="tag">03</span>
-        <h2>Ritmo</h2>
-        <p>
-          Código e conteúdo pensados com intenção: legíveis, consistentes e fáceis de manter.
-        </p>
-      </article>
-    </div>
-  </section>
+        <div class="lab-grid">
+          <article class="lab-card">
+            <span class="tag">01</span>
+            <h2>Arquitetura</h2>
+            <p>
+              Estruturas simples, narrativas claras e interfaces que respeitam o comportamento do usuário.
+            </p>
+          </article>
+
+          <article class="lab-card">
+            <span class="tag">02</span>
+            <h2>Interface</h2>
+            <p>
+              Contraste, ritmo visual e hierarquia funcional para comunicar sem ruído.
+            </p>
+          </article>
+
+          <article class="lab-card">
+            <span class="tag">03</span>
+            <h2>Ritmo</h2>
+            <p>
+              Código e conteúdo pensados com intenção: legíveis, consistentes e fáceis de manter.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
 </Layout>
 
 <style>
   .page-shell {
-    max-width: 68rem;
+    --c-cyan: #00e5ff;
+    --c-magenta: #ff2bd6;
+    --c-yellow: #ffe600;
+    --c-lime: #7dff3a;
+    --c-orange: #ff6a00;
+    --c-violet: #9b6bff;
+    --on-accent: #05050a;
+
+    position: relative;
+    isolation: isolate;
+    max-width: 72rem;
     margin: 0 auto;
-    padding: 10vh 1.5rem 4rem;
+    padding: 10vh 1.5rem 5rem;
+    color: var(--clr-text);
+    background: var(--clr-bg);
+  }
+
+  :global(html.theme-light) .page-shell {
+    background: linear-gradient(180deg, #f5f5f0 0%, #ffffff 100%);
+  }
+
+  .page-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(color-mix(in srgb, var(--c-cyan) 16%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--c-magenta) 12%, transparent) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .page-header {
+    max-width: 48rem;
+    margin-bottom: 4rem;
   }
 
   .eyebrow {
-    color: var(--clr-accent);
+    display: inline-block;
+    margin: 0 0 1.25rem;
+    padding: 0.45rem 0.7rem;
+    border: 2px solid var(--clr-text);
+    background: var(--c-lime);
+    color: var(--on-accent);
+    box-shadow: 3px 3px 0 var(--clr-text);
     font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
     font-size: 0.6rem;
     letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
+  }
+
+  .eyebrow::before {
+    content: "$ ";
+    opacity: 0.7;
   }
 
   h1 {
+    margin: 0;
     font-size: clamp(2.1rem, 5vw, 4.3rem);
-    margin-bottom: 2.5rem;
     line-height: 1.1;
+  }
+
+  h1::after {
+    content: "";
+    display: block;
+    width: min(100%, 20rem);
+    height: 10px;
+    margin-top: 1.5rem;
+    background: linear-gradient(
+      90deg,
+      var(--c-cyan) 0 25%,
+      var(--c-magenta) 0 50%,
+      var(--c-yellow) 0 75%,
+      var(--c-lime) 0
+    );
+    border: 2px solid var(--clr-text);
+    box-sizing: content-box;
+  }
+
+  .block {
+    color: var(--clr-text);
+  }
+
+  .block-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+    padding: 0.6rem 0.9rem;
+    border: 3px solid var(--clr-text);
+    background: var(--c-magenta);
+    color: var(--on-accent);
+    box-shadow: 6px 6px 0 var(--clr-text);
+  }
+
+  .block-title {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--on-accent);
+  }
+
+  .block-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    padding: 0.35rem 0.5rem;
+    border: 2px solid var(--on-accent);
+    background: var(--c-yellow);
+    color: var(--on-accent);
+    font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
+    font-size: 0.6rem;
+    box-shadow: 3px 3px 0 var(--on-accent);
+  }
+
+  .intro-panel {
+    display: grid;
+    gap: 2rem;
+    padding: clamp(1.25rem, 2vw, 2rem);
+    border: 3px solid var(--clr-text);
+    background: rgba(12, 13, 20, 0.72);
+    box-shadow: 8px 8px 0 var(--clr-text);
+  }
+
+  :global(html.theme-light) .intro-panel {
+    background: rgba(255, 255, 255, 0.85);
+  }
+
+  .intro {
+    margin: 0;
+    max-width: 42rem;
+    font-size: clamp(1.05rem, 2vw, 1.4rem);
+    line-height: 1.6;
   }
 
   .lab-grid {
@@ -72,11 +201,14 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .lab-card {
-    border: 2px solid var(--clr-text);
-    background: var(--clr-surface);
-    box-shadow: 6px 6px 0 var(--clr-text);
-    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
     min-height: 14rem;
+    padding: 1.25rem;
+    border: 2px solid var(--clr-text);
+    background: var(--c-cyan);
+    color: var(--on-accent);
+    box-shadow: 6px 6px 0 var(--clr-text);
   }
 
   .tag {
@@ -85,21 +217,36 @@ import Layout from '../layouts/Layout.astro';
     justify-content: center;
     min-width: 2.5rem;
     min-height: 2.5rem;
-    border: 2px solid var(--clr-text);
-    background: var(--clr-bg);
+    margin-bottom: 1rem;
+    border: 2px solid var(--on-accent);
+    background: var(--c-yellow);
+    color: var(--on-accent);
     font-family: "Press Start 2P", "Microsoft Sans Serif", monospace;
     font-size: 0.55rem;
-    margin-bottom: 1rem;
+    box-shadow: 3px 3px 0 var(--on-accent);
   }
 
   .lab-card h2 {
-    margin-bottom: 0.75rem;
+    margin: 0 0 0.75rem;
     font-size: 1.1rem;
+    color: var(--on-accent);
+  }
+
+  .lab-card p {
+    margin: 0;
+    line-height: 1.6;
+    color: var(--on-accent);
   }
 
   @media (max-width: 800px) {
     .lab-grid {
       grid-template-columns: 1fr;
     }
+  }
+
+  @media (max-width: 40rem) {
+    .page-shell { padding-inline: 1rem; }
+    .block-head { box-shadow: 4px 4px 0 var(--clr-text); }
+    .intro-panel { box-shadow: 5px 5px 0 var(--clr-text); }
   }
 </style>
