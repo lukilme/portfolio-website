@@ -2,10 +2,8 @@
 import ThemeToggle from './ThemeToggle.astro';
 import LanguageSwitcher from './LanguageSwitcher.astro';
 
-// Remove a barra final para evitar "//projetos" (URL protocol-relative)
 const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
 
-// Caminho atual sem o base, ex.: "/projetos"
 const current = Astro.url.pathname
   .replace(base, '')
   .replace(/\/+$/, '');
@@ -41,7 +39,7 @@ const path = Astro.url.pathname === '/' ? '~' : `~${Astro.url.pathname.replace(/
       <div class="sys-bar" aria-hidden="true">
   
       <span class="sys-bar__prompt">
-        <b>grm@sys</b><span class="sys-bar__sep">:</span><span class="sys-bar__path">{path}</span><span class="sys-bar__sep">$</span><span class="sys-bar__caret"></span>
+        <b>root@sys</b><span class="sys-bar__sep">:</span><span class="sys-bar__path">{path}</span><span class="sys-bar__sep">$</span><span class="sys-bar__caret"></span>
       </span>
       <span class="sys-bar__status">
         <i class="sys-bar__dot"></i>
